@@ -1,0 +1,1 @@
+CS:GO is still buggy with mouse jagging in native Wayland. XWayland is enough for most cases.
