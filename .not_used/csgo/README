@@ -1,1 +1,3 @@
 CS:GO is still buggy with mouse jagging in native Wayland. XWayland is enough for most cases.
+
+See https://github.com/ValveSoftware/csgo-osx-linux/issues/1470 for more information.
