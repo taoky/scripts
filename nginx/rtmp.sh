@@ -1,3 +1,3 @@
 #!/bin/sh
 
-nginx -c $PWD/rtmp.conf
+nginx -c "$PWD"/rtmp.conf
