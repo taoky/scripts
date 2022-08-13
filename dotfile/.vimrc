@@ -11,3 +11,7 @@ set shiftwidth=4
 
 " show matching brackets
 set showmatch
+
+" search configuration
+set hlsearch
+set incsearch
