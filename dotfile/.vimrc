@@ -8,6 +8,7 @@ set nu
 set expandtab
 set autoindent
 set shiftwidth=4
+set ts=4
 
 " show matching brackets
 set showmatch
