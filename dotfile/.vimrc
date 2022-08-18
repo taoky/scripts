@@ -7,6 +7,7 @@ set nu
 " indent
 set expandtab
 set autoindent
+set smartindent
 set shiftwidth=4
 set ts=4
 
