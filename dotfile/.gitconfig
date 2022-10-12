@@ -1,0 +1,7 @@
+[user]
+	email = me@taoky.moe
+	name = taoky
+[core]
+	editor = vim
+[alias]
+	adog = log --all --decorate --oneline --graph
