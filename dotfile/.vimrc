@@ -17,3 +17,7 @@ set showmatch
 " search configuration
 set hlsearch
 set incsearch
+
+" color
+set termguicolors
+set background=light
