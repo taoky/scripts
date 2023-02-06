@@ -4,3 +4,4 @@ set -x TLDR_CACHE_MAX_AGE 1680
 
 # User appended path
 fish_add_path ~/.cargo/bin
+fish_add_path ~/.local/bin
