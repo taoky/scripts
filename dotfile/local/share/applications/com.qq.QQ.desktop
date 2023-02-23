@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=QQ
+Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=qq --file-forwarding com.qq.QQ --force-device-scale-factor=1.25 @@u %U @@
+Terminal=false
+Type=Application
+Icon=com.qq.QQ
+StartupWMClass=QQ
+Categories=Network;
+Comment=QQ
+X-Flatpak=com.qq.QQ
