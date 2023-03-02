@@ -17,12 +17,13 @@ class OpenWithExtension(GObject.GObject, Nautilus.MenuProvider):
                                      label=_(u'Open in Code'),
                                      tip=_(u'Open this file or directory in Code'))
             item_code.connect('activate', self._code_callback, file_)
-            item_terminal = Nautilus.MenuItem(name='NautilusPython::open_in_terminal',
-                                              label=_(u'Open in Terminal'),
-                                              tip=_(u'Open this file or directory in Terminal'))
-            item_terminal.connect('activate', self._terminal_callback, file_)
             items.append(item_code)
-            items.append(item_terminal)
+            if file_.is_directory():
+                item_terminal = Nautilus.MenuItem(name='NautilusPython::open_in_terminal',
+                                                label=_(u'Open in Terminal'),
+                                                tip=_(u'Open this file or directory in Terminal'))
+                item_terminal.connect('activate', self._terminal_callback, file_)
+                items.append(item_terminal)            
         return items
 
     def get_background_items(self, *args):
