@@ -9,7 +9,7 @@ def main():
     now = datetime.datetime.now()
     title = "Time Notification"
     if now.hour >= 23 or now.hour <= 4:
-        contents = f"It's {now.hour}:{now.minute} now!"
+        contents = f"It's {now.hour:02}:{now.minute:02} now!"
     else:
         return
     noti = notify2.Notification(title, contents)
