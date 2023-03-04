@@ -1,0 +1,8 @@
+[Unit]
+Description="Systemd timer for sleep-timer"
+
+[Timer]
+OnCalendar=23,0,1,2,3,4:30
+
+[Install]
+WantedBy=timers.target

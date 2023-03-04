@@ -1,0 +1,9 @@
+[Unit]
+Description=Notify user when it's too late.
+
+[Service]
+Type=oneshot
+ExecStart=/home/taoky/scripts/sleep-timer/script.py
+
+[Install]
+WantedBy=default.target
