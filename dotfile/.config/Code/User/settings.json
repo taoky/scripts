@@ -1,0 +1,35 @@
+{
+    "workbench.colorTheme": "Solarized Light",
+    "window.zoomLevel": 3,
+    "telemetry.telemetryLevel": "off",
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "update.mode": "none",
+    "git.ignoreMissingGitWarning": true,
+    "editor.guides.bracketPairs": "active",
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.selectionClipboard": false,
+    "editor.inlineSuggest.enabled": true,
+    "explorer.confirmDragAndDrop": false,
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": true,
+        "plaintext": true,
+        "markdown": true
+    },
+    "python.formatting.blackPath": "/usr/bin/black",
+    "python.formatting.provider": "black",
+    "python.defaultInterpreterPath": "",
+    "files.maxMemoryForLargeFilesMB": 8192,
+    "terminal.integrated.gpuAcceleration": "off",
+    "editor.unicodeHighlight.invisibleCharacters": false,
+    "window.titleBarStyle": "custom",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "haskell.manageHLS": "GHCup",
+    "terminal.integrated.inheritEnv": false,
+    "files.watcherExclude": {
+        "**/venv/**": true
+    }
+}
