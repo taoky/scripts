@@ -31,5 +31,8 @@
     "terminal.integrated.inheritEnv": false,
     "files.watcherExclude": {
         "**/venv/**": true
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
 }
