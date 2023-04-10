@@ -1,0 +1,20 @@
+#
+# This file is parsed by pam_env module
+#
+# Syntax: simple "KEY=VAL" pairs on separate lines
+#
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
+SDL_IM_MODULE=fcitx
+GLFW_IM_MODULE=ibus
+
+# Firefox scrolling optimization
+MOZ_USE_XINPUT2=1
+MOZ_ENABLE_WAYLAND=1
+
+# Qt style
+# QT_QPA_PLATFORM="wayland;xcb"
+QT_STYLE_OVERRIDE=adwaita
+QT_QPA_PLATFORMTHEME='gnome'
+

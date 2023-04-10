@@ -1,4 +1,3 @@
-# https://wiki.archlinux.org/title/bluetooth#Bluetooth_immediately_waking_up_suspend-to-idle_devices
 [Unit]
 Description=Disable Bluetooth before going to sleep
 Before=sleep.target
