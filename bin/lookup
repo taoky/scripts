@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+# TODO: security and better format
+
+import argparse
+import sqlite3
+import os
+
+DATAFOLDER = os.path.join(os.path.expanduser("~"), "Documents", "Dictionaries")
+
+PRIORITY = (
+    ("New Oxford American Dictionary", ["en"]),
+    ("Oxford Dictionary of English", ["en"]),
+    ("Oxford American Writer's Thesaurus", ["en"]),
+    ("Oxford Thesaurus of English", ["en"]),
+    ("Simplified Chinese - English", ["zh", "en"]),
+    ("The Standard Dictionary of Contemporary Chinese", ["zh"]),
+    ("Simplified Chinese Idioms", ["zh"]),
+    ("Simplified Chinese Thesaurus", ["zh"]),
+    ("Traditional Chinese", ["zh"]),
+    ("Traditional Chinese - English Idioms", ["zh", "en"]),
+    ("Traditional Chinese Common Words", ["zh"]),
+    ("Simplified Chinese - Japanese", ["zh", "ja"]),
+    ("Sanseido The WISDOM English-Japanese Japanese-English Dictionary", ["en", "ja"]),
+)
+
+HTML_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{}">
+</head>
+<body>
+    {}
+</body>
+</html>
+"""
+
+RESULT_TEMPLATE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Lookup results of {word}</title>
+    <script>
+    function resizeIframe(obj) {{
+        obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+    }}
+    </script>
+</head>
+<body>
+    {body}
+</body>
+</html>
+"""
+
+
+def main(args):
+    word = args.word
+    if args.lang:
+        lang = args.lang
+    else:
+        # Very naive heuristic to detect language
+        # Does it contain Katakana or Hiragana?
+        if any(0x3040 <= ord(c) <= 0x309F or 0x30A0 <= ord(c) <= 0x30FF for c in word):
+            lang = "ja"
+        # Does it contain Chinese characters?
+        elif any(0x4E00 <= ord(c) <= 0x9FFF for c in word):
+            lang = "zh"
+        else:
+            lang = "en"
+        print("Auto detected language: " + lang)
+    outputs = []
+    for dic in PRIORITY:
+        if lang in dic[1] or args.all:
+            dictionary_name = dic[0]
+            conn = sqlite3.connect(os.path.join(DATAFOLDER, dic[0] + ".db"))
+            c = conn.cursor()
+            if not args.list:
+                body = ""
+                results = c.execute(
+                    "SELECT * FROM definitions WHERE title=?", (word,)
+                ).fetchall()
+                if not results:
+                    print(f"Not found in {dictionary_name}")
+                    continue
+                # assert len(results) == 1
+                print(f"Found in {dictionary_name}:")
+                for result in results:
+                    body = result[2].decode("utf-8")
+                    output = HTML_TEMPLATE.format(
+                        os.path.join(DATAFOLDER, dic[0] + ".css"), body
+                    )
+                    outputs.append((dictionary_name, output))
+            else:
+                results = c.execute(
+                    "SELECT title FROM definitions WHERE title GLOB ?", (word,)
+                ).fetchall()
+                if not results:
+                    print(f"Not found in {dictionary_name}")
+                else:
+                    print(f"Found in {dictionary_name}:")
+                    for result in results:
+                        print(result[0])
+            conn.close()
+    if not args.list:
+        result_body = ""
+        if len(outputs) == 0:
+            print("Not found in any dictionary")
+            return
+        for output in outputs:
+            result_body += """
+            <h1>Result from {}</h1>
+            <iframe srcdoc="{}" width="100%" frameborder="0" onload="resizeIframe(this)"></iframe>
+            """.format(
+                output[0], output[1].replace('"', "&quot;")
+            )
+        result = RESULT_TEMPLATE.format(word=word, body=result_body)
+        with open("/tmp/lookup_result.html", "w") as f:
+            f.write(result)
+        if args.noopen:
+            print("Result written to result.html")
+        else:
+            # use xdg-open to open result.html
+            import subprocess
+
+            subprocess.run(["xdg-open", "/tmp/lookup_result.html"])
+
+
+if __name__ == "__main__":
+    # ./lookup apple --lang=en
+    parser = argparse.ArgumentParser()
+    parser.add_argument("word", help="word to lookup")
+    parser.add_argument(
+        "--lang",
+        help="language to lookup (it tries to auto detect when not set)",
+        type=str,
+        default=None,
+    )
+    parser.add_argument(
+        "--list",
+        help="list available word in dictionaries by word glob",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--noopen", help="do not open result in browser", action="store_true"
+    )
+    parser.add_argument("--all", help="lookup in all dictionaries", action="store_true")
+    args = parser.parse_args()
+    main(args)
