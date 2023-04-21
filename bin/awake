@@ -12,7 +12,18 @@ import ctypes
 libc = ctypes.CDLL("libc.so.6")
 
 # PR_SET_PDEATHSIG = 1, SIGKILL = 9
-handle = Popen(["gnome-session-inhibit", "sleep", args.time], preexec_fn=lambda: libc.prctl(1, 9))
+handle = Popen(
+    [
+        "gnome-session-inhibit",
+        "--inhibit",
+        "idle",
+        "--inhibit",
+        "suspend",
+        "sleep",
+        args.time,
+    ],
+    preexec_fn=lambda: libc.prctl(1, 9),
+)
 
 # Load Gtk
 import gi
