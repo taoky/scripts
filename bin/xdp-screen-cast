@@ -29,9 +29,35 @@ parser.add_argument(
     "--show-cursor", help="Show cursor in the screencast", action="store_true"
 )
 parser.add_argument(
-    "--remote-udp", help="Stream to remote UDP (with some horizontal line artifacts)", action="store_true"
+    "--remote-udp",
+    help="Stream to remote UDP (with some horizontal line tearing maybe)",
+    action="store_true",
+)
+parser.add_argument(
+    "--x264",
+    help="Use x264enc instead of raw with remote-udp (not recommended, blurry)",
+    action="store_true",
+)
+parser.add_argument(
+    "--remote-receiver",
+    help="Remote receiver address (default: 127.0.0.1)",
+    default="127.0.0.1",
+    type=str,
 )
 args = parser.parse_args()
+
+# https://stackoverflow.com/a/30738533
+if args.remote_udp and not args.x264:
+    # fetch net.core.rmem_max
+    with open("/proc/sys/net/core/rmem_max", "r") as f:
+        net_core_rmem_max = int(f.read())
+    if net_core_rmem_max < 1000000:
+        print(
+            "Warning: set net.core.rmem_max to 1000000 or larger on receiver to avoid horizontal line tearing"
+        )
+        print("Command (1 MiB): sudo sysctl -w net.core.rmem_max=1048576")
+        print("(16 MiB): sudo sysctl -w net.core.rmem_max=16777216")
+    print("Your current UDP receive buffer size is %d" % net_core_rmem_max)
 
 # cursor_mode 2: Embedded (The cursor is embedded as part of the stream buffers)
 # showing cursor may cause some bugs in some environments
@@ -108,27 +134,34 @@ def play_pipewire_stream(node_id):
     )
     fd = fd_object.take()
     if args.remote_udp:
-        gst_command = "pipewiresrc fd=%d path=%u ! videoconvert ! rtpvrawpay name=pay0 ! udpsink host=127.0.0.1 port=5000" % (
-            fd,
-            node_id,
-        )
+        if not args.x264:
+            gst_command = f"pipewiresrc fd=%d path=%u ! videoconvert ! rtpvrawpay name=pay0 ! udpsink host={args.remote_receiver} port=5000"
+        else:
+            gst_command = f"pipewiresrc fd=%d path=%u ! videoconvert ! queue ! x264enc tune=zerolatency ! rtph264pay name=pay0 ! udpsink host={args.remote_receiver} port=5000"
     else:
-        gst_command = "pipewiresrc fd=%d path=%u ! videoconvert ! xvimagesink" % (
-            fd,
-            node_id,
-        )
+        gst_command = "pipewiresrc fd=%d path=%u ! videoconvert ! xvimagesink"
     # gst_command = "pipewiresrc fd=%d path=%u ! videoconvert ! xvimagesink" % (
     # gst_command = "pipewiresrc fd=%d path=%u ! videoconvert ! x264enc tune=zerolatency ! rtph264pay ! rtph264depay ! avdec_h264 ! xvimagesink" % (
+    # gst_command = "pipewiresrc fd=%d path=%u ! videoconvert ! rtpvrawpay ! application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)RAW, sampling=(string)BGR, depth=(string)8, width=(string)1920, height=(string)1200, colorimetry=(string)SMPTE240M, payload=(int)96, ssrc=(uint)1096418925, timestamp-offset=(uint)4132974598, seqnum-offset=(uint)32248, a-framerate=(string)60.002223968505859 ! rtpvrawdepay ! videoconvert ! xvimagesink" % (fd, node_id)
     # gst_command = "pipewiresrc fd=%d path=%u ! videoconvert ! rtpvrawpay ! rtpvrawdepay ! xvimagesink" % (
-    # gst_command = "pipewiresrc fd=%d path=%u ! videoconvert ! x264enc tune=zerolatency ! rtph264pay ! udpsink host=127.0.0.1 port=5000" % (
-    
+    # gst_command = "pipewiresrc fd=%d path=%u ! videoconvert ! x264enc pass=qual quantizer=21 tune=zerolatency bitrate=1000 ! rtph264pay ! rtph264depay ! avdec_h264 ! xvimagesink" % (fd, node_id)
+    gst_command = gst_command % (fd, node_id)
+
     pipeline = Gst.parse_launch(gst_command)
 
     if args.remote_udp:
+
         def pad_probe_cb(pad, info, user_data):
             caps = pad.get_current_caps()
             if caps:
-                print(f"Command: gst-launch-1.0 udpsrc port=5000 caps='{caps.to_string()}' ! rtpvrawdepay ! videoconvert ! xvimagesink")
+                if args.x264:
+                    print(
+                        f"Command: gst-launch-1.0 udpsrc port=5000 caps='{caps.to_string()}' ! rtph264depay ! avdec_h264 ! videoconvert ! xvimagesink"
+                    )
+                else:
+                    print(
+                        f"Command: gst-launch-1.0 udpsrc port=5000 buffer-size={net_core_rmem_max} caps='{caps.to_string()}' ! rtpvrawdepay ! videoconvert ! xvimagesink"
+                    )
             return Gst.PadProbeReturn.PASS
 
         udpsink = pipeline.get_by_name("pay0")
@@ -148,7 +181,7 @@ def on_start_response(response, results):
         return
 
     print("streams:")
-    for (node_id, stream_properties) in results["streams"]:
+    for node_id, stream_properties in results["streams"]:
         print("stream {}".format(node_id))
         play_pipewire_stream(node_id)
 
