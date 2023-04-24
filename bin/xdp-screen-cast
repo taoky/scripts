@@ -156,11 +156,11 @@ def play_pipewire_stream(node_id):
             if caps:
                 if args.x264:
                     print(
-                        f"Command: gst-launch-1.0 udpsrc port=5000 caps='{caps.to_string()}' ! rtph264depay ! avdec_h264 ! videoconvert ! xvimagesink"
+                        f"Command: gst-launch-1.0 udpsrc port=5000 caps='{caps.to_string()}' ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink"
                     )
                 else:
                     print(
-                        f"Command: gst-launch-1.0 udpsrc port=5000 buffer-size={net_core_rmem_max} caps='{caps.to_string()}' ! rtpvrawdepay ! videoconvert ! xvimagesink"
+                        f"Command: gst-launch-1.0 udpsrc port=5000 buffer-size={net_core_rmem_max} caps='{caps.to_string()}' ! rtpvrawdepay ! videoconvert ! autovideosink"
                     )
             return Gst.PadProbeReturn.PASS
 
