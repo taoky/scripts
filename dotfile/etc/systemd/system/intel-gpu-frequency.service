@@ -1,0 +1,12 @@
+[Unit]
+Description=Set intel GPU frequency after graphical interface is loaded
+After=graphical.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/intel_gpu_frequency -m
+RemainAfterExit=yes
+
+[Install]
+WantedBy=graphical.target
+
