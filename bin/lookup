@@ -46,6 +46,13 @@ RESULT_TEMPLATE = """
     function resizeIframe(obj) {{
         obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
     }}
+
+    window.addEventListener("resize", function () {{
+        var iframes = document.getElementsByTagName("iframe");
+        for (var i = 0; i < iframes.length; i++) {{
+            resizeIframe(iframes[i]);
+        }}
+    }})
     </script>
 </head>
 <body>
