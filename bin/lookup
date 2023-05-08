@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-# TODO: security and better format
+# TODO: security and code cleanup
 
 import argparse
 import sqlite3
 import os
+import http.server
+import subprocess
+from urllib.parse import urlparse, parse_qs
 
 DATAFOLDER = os.path.join(os.path.expanduser("~"), "Documents", "Dictionaries")
 
@@ -48,10 +51,10 @@ RESULT_TEMPLATE = """
     }}
 
     window.addEventListener("resize", function () {{
-        var iframes = document.getElementsByTagName("iframe");
-        for (var i = 0; i < iframes.length; i++) {{
-            resizeIframe(iframes[i]);
-        }}
+        const iframes = document.getElementsByTagName("iframe");
+        Array.prototype.forEach.call(iframes, function(iframe) {{
+            resizeIframe(iframe);
+        }});
     }})
     </script>
 </head>
@@ -62,82 +65,227 @@ RESULT_TEMPLATE = """
 """
 
 
+SERVER_PAGE = """
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Lookup server</title>
+    <script>
+    function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+    }
+
+    window.addEventListener("resize", function () {
+        const iframes = document.getElementsByTagName("iframe");
+        Array.prototype.forEach.call(iframes, function(iframe) {
+            resizeIframe(iframe);
+        });
+    })
+    </script>
+</head>
+<body>
+    <h3>List</h3>
+    <form action="/list" id="list_form">
+        <input type="text" name="q" value="">
+        <input type="submit" value="Submit">
+    </form>
+    <h3>Lookup</h3>
+    <form action="/" id="lookup_form">
+        <input type="text" name="q" value="">
+        <input type="submit" value="Submit">
+    </form>
+
+    <h3>Result</h3>
+    <p id="not_found" style="display: none;">Not found</p>
+    <iframe id="iframe" src="about:blank" width="100%" frameborder="0" onload="resizeIframe(this)"></iframe>
+
+    <script>
+        // fetch ajax api when form is submitted
+        const BASE = "http://127.0.0.1:3835";
+
+        function processForm(event, formId, endpoint) {
+            event.preventDefault();
+            
+            let form = document.getElementById(formId);
+            let query = form.elements["q"].value;
+            let url = `${BASE}${endpoint}?q=${query}`;
+            
+            fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById("not_found").style.display = "none";
+                        response.text().then(text => {
+                            document.getElementById("iframe").srcdoc = text;
+                        });
+                    } else {
+                        document.getElementById("not_found").style.display = "block";
+                        document.getElementById("iframe").srcdoc = "";
+                    }
+                });
+        }
+
+        document.getElementById("list_form").addEventListener("submit", e => {
+            processForm(e, "list_form", "/list");
+        });
+
+        document.getElementById("lookup_form").addEventListener("submit", e => {
+            processForm(e, "lookup_form", "/");
+        });
+    </script>
+</body>
+</html>
+"""
+
+
+def open_browser(url):
+    subprocess.run(["xdg-open", url])
+
+
+def get_detected_language(word):
+    if any(
+        0x3040 <= ord(c) <= 0x309F or 0x30A0 <= ord(c) <= 0x30FF for c in word
+    ):  # Katakana or Hiragana
+        return "ja"
+    elif any(0x4E00 <= ord(c) <= 0x9FFF for c in word):  # Chinese characters
+        return "zh"
+    return "en"
+
+
+def search_dictionary(conn, word, is_list):
+    query = (
+        "SELECT title FROM definitions WHERE title GLOB ?"
+        if is_list
+        else "SELECT * FROM definitions WHERE title=?"
+    )
+    cursor = conn.cursor()
+    return cursor.execute(query, (word,)).fetchall()
+
+
+def generate_output(outputs, is_list, word=None):
+    if not is_list:
+        result_body = "".join(
+            f"""
+            <h1>Result from {output[0]}</h1>
+            <iframe srcdoc="{output[1].replace('"', '&quot;')}" width="100%" frameborder="0" onload="resizeIframe(this)"></iframe>
+            """
+            for output in outputs
+        )
+        result = RESULT_TEMPLATE.format(word=word, body=result_body)
+    else:
+        result = "".join(output for output in outputs)
+
+    return result
+
+
 def main(args):
     word = args.word
-    if args.lang:
-        lang = args.lang
-    else:
-        # Very naive heuristic to detect language
-        # Does it contain Katakana or Hiragana?
-        if any(0x3040 <= ord(c) <= 0x309F or 0x30A0 <= ord(c) <= 0x30FF for c in word):
-            lang = "ja"
-        # Does it contain Chinese characters?
-        elif any(0x4E00 <= ord(c) <= 0x9FFF for c in word):
-            lang = "zh"
-        else:
-            lang = "en"
+    lang = args.lang or get_detected_language(word)
+    if not args.lang:
         print("Auto detected language: " + lang)
+
     outputs = []
     for dic in PRIORITY:
         if lang in dic[1] or args.all:
             dictionary_name = dic[0]
             conn = sqlite3.connect(os.path.join(DATAFOLDER, dic[0] + ".db"))
-            c = conn.cursor()
-            if not args.list:
-                body = ""
-                results = c.execute(
-                    "SELECT * FROM definitions WHERE title=?", (word,)
-                ).fetchall()
-                if not results:
-                    print(f"Not found in {dictionary_name}")
-                    continue
-                # assert len(results) == 1
-                print(f"Found in {dictionary_name}:")
-                for result in results:
-                    body = result[2].decode("utf-8")
-                    output = HTML_TEMPLATE.format(
-                        os.path.join(DATAFOLDER, dic[0] + ".css"), body
-                    )
-                    outputs.append((dictionary_name, output))
-            else:
-                results = c.execute(
-                    "SELECT title FROM definitions WHERE title GLOB ?", (word,)
-                ).fetchall()
-                if not results:
-                    print(f"Not found in {dictionary_name}")
-                else:
-                    print(f"Found in {dictionary_name}:")
-                    for result in results:
-                        print(result[0])
+            results = search_dictionary(conn, word, args.list)
             conn.close()
-    if not args.list:
-        result_body = ""
-        if len(outputs) == 0:
-            print("Not found in any dictionary")
-            return
-        for output in outputs:
-            result_body += """
-            <h1>Result from {}</h1>
-            <iframe srcdoc="{}" width="100%" frameborder="0" onload="resizeIframe(this)"></iframe>
-            """.format(
-                output[0], output[1].replace('"', "&quot;")
-            )
-        result = RESULT_TEMPLATE.format(word=word, body=result_body)
-        with open("/tmp/lookup_result.html", "w") as f:
-            f.write(result)
-        if args.noopen:
-            print("Result written to result.html")
-        else:
-            # use xdg-open to open result.html
-            import subprocess
 
-            subprocess.run(["xdg-open", "/tmp/lookup_result.html"])
+            if not results:
+                print(f"Not found in {dictionary_name}")
+                if args.list:
+                    outputs.append(f"<p>Not found in {dictionary_name}</p>")
+                continue
+
+            if not args.list:
+                print(f"Found in {dictionary_name}:")
+                outputs.extend(
+                    [
+                        (
+                            dictionary_name,
+                            HTML_TEMPLATE.format(
+                                os.path.join(DATAFOLDER, dic[0] + ".css"),
+                                result[2].decode("utf-8"),
+                            ),
+                        )
+                        for result in results
+                    ]
+                )
+
+            else:
+                print(f"Found in {dictionary_name}:")
+                outputs.append(f"<p>Found in {dictionary_name}:</p>")
+                for result in results:
+                    outputs.append(f"<p>{result[0]}</p>")
+                    print(result[0])
+
+    if not outputs:
+        return False
+
+    output = generate_output(outputs, args.list, word)
+
+    if not args.list:
+        with open("/tmp/lookup_result.html", "w") as f:
+            f.write(output)
+        if not args.noopen and not args.server:
+            open_browser("/tmp/lookup_result.html")
+
+    elif args.list and args.server:
+        with open("/tmp/list_result.html", "w") as f:
+            f.write(output)
+
+    return True
+
+
+class DictionaryServer(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        parsed_url = urlparse(self.path)
+        path = parsed_url.path
+
+        if path in ("/", "/list"):
+            args.list = path == "/list"
+            query_params = parse_qs(parsed_url.query)
+            query = query_params["q"][0]
+            args.word = query
+            found = main(args)
+
+            if found:
+                response_code = 200
+                response_file = (
+                    "/tmp/lookup_result.html"
+                    if not args.list
+                    else "/tmp/list_result.html"
+                )
+            else:
+                response_code = 404
+                response_file = None
+
+            self.send_response(response_code)
+            self.send_header("Content-type", "text/html")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+
+            if response_file:
+                with open(response_file, "rb") as f:
+                    self.wfile.write(f.read())
+
+
+def remove_file_ignore_error(filename):
+    try:
+        os.remove(filename)
+    except OSError:
+        pass
 
 
 if __name__ == "__main__":
+    # Example:
     # ./lookup apple --lang=en
+    # ./lookup antic
+    # ./lookup --list 'ambro*'
+    # ./lookup --server
     parser = argparse.ArgumentParser()
-    parser.add_argument("word", help="word to lookup")
+    parser.add_argument("word", help="word to lookup", nargs="?")
     parser.add_argument(
         "--lang",
         help="language to lookup (it tries to auto detect when not set)",
@@ -153,5 +301,26 @@ if __name__ == "__main__":
         "--noopen", help="do not open result in browser", action="store_true"
     )
     parser.add_argument("--all", help="lookup in all dictionaries", action="store_true")
+    parser.add_argument("--server", help="run as server", action="store_true")
     args = parser.parse_args()
-    main(args)
+    if args.server:
+        with open("/tmp/lookup_server.html", "w") as f:
+            f.write(SERVER_PAGE)
+        PORT = 3835
+        with http.server.HTTPServer(("127.0.0.1", PORT), DictionaryServer) as httpd:
+            print("serving at 127.0.0.1, port", PORT)
+            open_browser("/tmp/lookup_server.html")
+            try:
+                httpd.serve_forever()
+            except KeyboardInterrupt:
+                print("Keyboard interrupt received, exiting.")
+                httpd.server_close()
+                print("Cleaning up temporary files...")
+                remove_file_ignore_error("/tmp/lookup_server.html")
+                remove_file_ignore_error("/tmp/lookup_result.html")
+                remove_file_ignore_error("/tmp/list_result.html")
+    else:
+        if not args.word:
+            parser.print_help()
+            exit(1)
+        main(args)
