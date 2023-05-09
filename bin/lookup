@@ -72,15 +72,16 @@ SERVER_PAGE = """
     <meta charset="utf-8">
     <title>Lookup server</title>
     <script>
-    function resizeIframe(obj) {
-        obj.style.height = "0px";  // suppress the bottom white space when switching srcdoc
+    function resizeIframe(obj, reset = true) {
+        if (reset)
+            obj.style.height = "0px";  // suppress the bottom white space when switching srcdoc
         obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
     }
 
     window.addEventListener("resize", function () {
         const iframes = document.getElementsByTagName("iframe");
         Array.prototype.forEach.call(iframes, function(iframe) {
-            resizeIframe(iframe);
+            resizeIframe(iframe, false);
         });
     })
     </script>
