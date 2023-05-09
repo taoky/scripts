@@ -73,6 +73,7 @@ SERVER_PAGE = """
     <title>Lookup server</title>
     <script>
     function resizeIframe(obj) {
+        obj.style.height = "0px";  // suppress the bottom white space when switching srcdoc
         obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
     }
 
