@@ -1,6 +1,7 @@
 assignments {
 	batch {
 		clang++
+		cc1
 		cc1plus
 		llvm-tblgen
 	}
