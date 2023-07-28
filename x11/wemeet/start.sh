@@ -2,7 +2,7 @@
 
 # Start weston
 echo "Starting weston"
-weston -c $(dirname "$0")/weston.ini --socket=wayland-114 &
+weston -c $(realpath $(dirname "$0")/weston.ini) --socket=wayland-114 &
 
 sleep 3
 
