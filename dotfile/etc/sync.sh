@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 rsync -a /etc/pacman.conf pacman.conf
 rsync -a /etc/pacman.d/mirrorlist pacman.d/mirrorlist
@@ -9,3 +9,5 @@ rsync -a /etc/systemd/system/kdump*.service systemd/system/
 rsync -a /etc/mkinitcpio* .
 rsync -a /etc/environment .
 rsync -a /etc/default/grub default/
+sudo rsync -a /etc/sudoers.d .
+sudo chown taoky:taoky -R ./sudoers.d

@@ -1,0 +1,2 @@
+Defaults env_keep += "SYSTEMD_EDITOR"
+Defaults env_keep += "EDITOR"
