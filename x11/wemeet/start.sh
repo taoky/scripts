@@ -1,16 +1,14 @@
 #!/bin/sh -e
 
-# Start weston
-echo "Starting weston"
-weston -c $(realpath $(dirname "$0")/weston.ini) --socket=wayland-114 &
-
-sleep 3
-
 # Start xwayland
+# https://aur.archlinux.org/packages/xwayland-standalone-with-libdecor
 echo "Starting Xwayland"
-WAYLAND_DISPLAY=wayland-114 Xwayland :114 -ac -retro +extension RANDR +extension RENDER +extension GLX +extension XVideo +extension DOUBLE-BUFFER +extension SECURITY +extension DAMAGE +extension X-Resource -extension XINERAMA -xinerama -extension MIT-SHM +extension Composite +extension COMPOSITE -extension XTEST -tst -dpms -s off -fullscreen &
+Xwayland-standalone :114 -ac -retro +extension RANDR +extension RENDER +extension GLX +extension XVideo +extension DOUBLE-BUFFER +extension SECURITY +extension DAMAGE +extension X-Resource -extension XINERAMA -xinerama -extension MIT-SHM +extension Composite +extension COMPOSITE -extension XTEST -tst -dpms -s off -decorate -geometry 1920x1080 &
 
-sleep 3
+echo "Waiting for X server to be ready"
+while ! xdpyinfo -display :114 >/dev/null 2>&1; do
+    sleep 1
+done
 
 # Start openbox and wemeet
 echo "Starting openbox"
