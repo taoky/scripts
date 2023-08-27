@@ -15,6 +15,5 @@ MOZ_ENABLE_WAYLAND=1
 
 # Qt style
 # QT_QPA_PLATFORM="wayland;xcb"
-QT_STYLE_OVERRIDE=adwaita
-QT_QPA_PLATFORMTHEME='gnome'
+QT_STYLE_OVERRIDE=breeze
 

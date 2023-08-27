@@ -49,12 +49,6 @@
   <menu id="apps-fileman-menu"/>
   <separator label="System" />
   <menu id="system-menu"/>
-  <separator />
-  <item label="Log Out">
-    <action name="Exit">
-      <prompt>yes</prompt>
-    </action>
-  </item>
 </menu>
 
 </openbox_menu>
