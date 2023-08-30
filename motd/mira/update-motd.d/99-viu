@@ -1,0 +1,3 @@
+#!/bin/bash
+
+COLORTERM=truecolor viu /opt/motd.png
