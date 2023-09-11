@@ -2,7 +2,8 @@
     "redirections": {
         "/justask": "https://fars.ee/~justask.html",
         "/howtoask": "https://lug.ustc.edu.cn/wiki/doc/smart-questions/",
-        "/xy": "https://coolshell.cn/articles/10804.html"
+        "/xy": "https://coolshell.cn/articles/10804.html",
+        "/utf8": "https://utf8everywhere.org/zh-cn" 
     },
     "bind": "localhost:1200"
 }
