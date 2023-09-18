@@ -9,5 +9,6 @@ rsync -a /etc/systemd/system/kdump*.service systemd/system/
 rsync -a /etc/mkinitcpio* .
 rsync -a /etc/environment .
 rsync -a /etc/default/grub default/
+rsync -a /etc/tlp.d/ tlp.d
 sudo rsync -a /etc/sudoers.d .
 sudo chown taoky:taoky -R ./sudoers.d
