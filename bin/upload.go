@@ -26,7 +26,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		w.Write([]byte(`
 			   <html><head><meta name="viewport" content="width=device-width, initial-scale=1" /></head>
-               <body>
+			   <body>
 			   <form action="/" method="POST" enctype="multipart/form-data">
 			   <input type="file" name="file" />
 			   <input type="submit" value="Upload" />
@@ -62,7 +62,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Fprintf(w, "File uploaded successfully: "+sanitized_path)
-        fmt.Printf("%s\n", sanitized_path)
+		fmt.Printf("%s\n", sanitized_path)
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
