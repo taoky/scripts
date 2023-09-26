@@ -1,0 +1,9 @@
+version: "2"
+services:
+  shell:
+    build: .
+    volumes:
+      - $HOME/iOSBackup:/backup
+      # usbmuxd will recreate /run/usbmuxd when reconnected
+      # so let's just mount /run as a whole
+      - /run/:/run/
