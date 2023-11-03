@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Cider
-Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=cider-wrapper sh.cider.Cider --force-device-scale-factor=1.25 --ozone-platform=x11
+Exec=/home/taoky/Tools/Cider-1.6.2.AppImage --force-device-scale-factor=1.25 --ozone-platform=x11
 Terminal=false
 Type=Application
 Icon=sh.cider.Cider
