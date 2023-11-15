@@ -5,6 +5,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"os"
 	"os/user"
@@ -68,9 +69,56 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+var PORT = 8080
+
+func getHTTPURL(addr net.Addr) (string, error) {
+	// Assuming addr is net.IPNet
+	ipnet, ok := addr.(*net.IPNet)
+	if !ok {
+		return "", fmt.Errorf("Cannot get IPNet from %s", addr.String())
+	}
+
+	ip := ipnet.IP
+	if ip4 := ip.To4(); ip4 != nil {
+		return fmt.Sprintf("http://%s:%d", ip4, PORT), nil
+	} else {
+		// filter out ipv6 link-local address
+		if ip.IsLinkLocalUnicast() {
+			return "", fmt.Errorf("Link-local address %s is ignored", ip.String())
+		}
+		return fmt.Sprintf("http://[%s]:%d", ip, PORT), nil
+	}
+}
+
+func showStartedMsg() error {
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		return err
+	}
+	fmt.Println("Server will start at:")
+	for _, i := range ifaces {
+		addrs, err := i.Addrs()
+		if err != nil {
+			fmt.Print(fmt.Errorf("Error: %s\n", err.Error()))
+			continue
+		}
+		iName := i.Name
+		for _, addr := range addrs {
+			urlStr, err := getHTTPURL(addr)
+			if err != nil {
+				continue
+			}
+			fmt.Printf("%s %s\n", iName, urlStr)
+		}
+	}
+	return nil
+}
+
 func main() {
 	http.HandleFunc("/", uploadFile)
 
-	fmt.Printf("Server started at :8080\n")
+	if showStartedMsg() != nil {
+		fmt.Println("Cannot get interface address. Try to start server at 8080 manually.")
+	}
 	http.ListenAndServe(":8080", nil)
 }
