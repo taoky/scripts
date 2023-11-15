@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func sanitize_filename(filename string) string {
+func sanitizeFilename(filename string) string {
 	filename = strings.Replace(filename, "/", "_", -1)
 	usr, _ := user.Current()
 	dir := usr.HomeDir + "/Public/"
@@ -47,7 +47,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		}
 		defer file.Close()
 
-		sanitized_path := sanitize_filename(header.Filename)
+		sanitized_path := sanitizeFilename(header.Filename)
 
 		out, err := os.Create(sanitized_path)
 		if err != nil {
