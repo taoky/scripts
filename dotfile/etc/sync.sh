@@ -11,7 +11,7 @@ rsync -a /etc/mkinitcpio* .
 rsync -a /etc/environment .
 rsync -a /etc/default/grub default/
 rsync -a /etc/tlp.d/ tlp.d
-rsync -a /etc/modprobe.d/ modprobe.d
+rsync -a /etc/modules-load.d/ modules-load.d
 rsync -a /etc/docker/daemon.json docker/daemon.json
 sudo rsync -a /etc/sudoers.d .
 sudo chown taoky:taoky -R ./sudoers.d
