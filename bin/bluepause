@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+import dbus
+from dbus.mainloop.glib import DBusGMainLoop
+import gi.repository.GLib as glib
+import os
+
+
+def device_removed_callback(object_, interfaces):
+    if interfaces[-1] != "org.bluez.MediaPlayer1":
+        return
+    # You would filter that 'device' is your Bluetooth headphone
+    print(f"Device removed ({object_}).")
+    # Pause audio playback using playerctl or pactl
+    os.system("playerctl --all-players pause")
+    # or call a DBus method to pause audio on the player
+
+
+# Setting up the main loop
+DBusGMainLoop(set_as_default=True)
+bus = dbus.SystemBus()
+
+# Connect to the signal you're interested in
+bus.add_signal_receiver(
+    device_removed_callback,
+    bus_name="org.bluez",
+    path="/",
+    dbus_interface="org.freedesktop.DBus.ObjectManager",
+    signal_name="InterfacesRemoved",
+)
+
+# Run the main loop
+loop = glib.MainLoop()
+loop.run()

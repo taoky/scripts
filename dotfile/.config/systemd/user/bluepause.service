@@ -1,0 +1,9 @@
+[Unit]
+Description= Auto pause players when bluetooth headphones disconnect 
+
+[Service]
+Type=simple
+ExecStart=/home/taoky/.local/bin/bluepause
+
+[Install]
+WantedBy=default.target
