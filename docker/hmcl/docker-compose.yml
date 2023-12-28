@@ -13,4 +13,4 @@ services:
       - $HOME/.local/share/hmcl:/home/hmcl/.local/share/hmcl
       - $HOME/Games/Minecraft/.minecraft:/home/hmcl/.minecraft
       - /dev/dri:/dev/dri
-    network_mode: "host"
+    #network_mode: "host"
