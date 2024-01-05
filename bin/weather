@@ -166,7 +166,9 @@ def main(args):
         res = res["fields"]
         if res["alert"]:
             print("=== 天气预警 ===")
-            print(res["alert"])
+            for alert in res["alert"]:
+                print(alert["description"])
+                print()
         print(f"要点：{res['keypoint']}")
         print(f"两小时内天气情况：{res['minutely_description']}")
         print(f"未来 24 小时天气情况：{res['hourly_description']}")
