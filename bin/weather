@@ -1,0 +1,87 @@
+#!/usr/bin/python3
+
+import requests
+import argparse
+import os
+from xdg.BaseDirectory import xdg_config_home
+import json
+
+
+with open(os.path.join(xdg_config_home, "caiyun.json"), "r") as f:
+    config = json.load(f)
+
+
+def url_for(location: str) -> str:
+    token = config["token"]
+    lat, long = config["locations"][location]
+    return f"https://api.caiyunapp.com/v2.6/{token}/{long},{lat}/realtime.json&unit=metric:v2"
+
+
+def parse_weather(data: dict, location_name: str):
+    if data["status"] != "ok":
+        return
+    timestamp = data["server_time"] * 1000000000
+    realtime = data["result"]["realtime"]
+    if realtime["status"] != "ok":
+        return
+
+    weather_keys = [
+        "temperature", "humidity", "cloudrate", "visibility", "dswrf",
+        "pressure", "apparent_temperature",
+    ]
+    weather = {k: realtime[k] for k in weather_keys}
+    weather["cloudrate"] = float(weather["cloudrate"])
+    weather["wind_speed"] = realtime["wind"]["speed"]
+    weather["wind_direction"] = realtime["wind"]["direction"]
+
+    precipitation = realtime["precipitation"]["local"]
+    if precipitation["status"] == "ok":
+        weather["precipitation"] = precipitation["intensity"]
+
+    air_quality = realtime["air_quality"]
+    weather["aqi_chn"] = air_quality["aqi"]["chn"]
+    weather["aqi_usa"] = air_quality["aqi"]["usa"]
+    weather["pm25"] = air_quality["pm25"]
+
+    return {
+        "measurement": "weather",
+        "tags": {
+            "location": location_name,
+        },
+        "time": timestamp,
+        "fields": weather,
+    }
+
+
+def fetch(location: str) -> str:
+    url = url_for(location)
+    response = requests.get(url)
+    return parse_weather(response.json(), location)
+
+
+def main(args):
+    res = fetch(args.location)
+    if res is None:
+        print("Error")
+    else:
+        res = res['fields']
+        print("地表 2 米气温: %.1f°C" % res['temperature'])
+        print("地表 2 米湿度相对湿度: %.1f%%" % res['humidity'])
+        print("总云量: %.1f%%" % (res['cloudrate'] * 100))
+        print("地表水平能见度: %.1fkm" % res['visibility'])
+        print("向下短波辐射通量: %.1f W/M2" % res['dswrf'])
+        print("地面气压: %.1fPa" % res['pressure'])
+        print("体感温度: %.1f°C" % res['apparent_temperature'])
+        print("地表 10 米风速: %.1fkm/hr" % res['wind_speed'])
+        print("地表 10 米风向（从北顺时针）: %.1f°" % res['wind_direction'])
+        print("本地降水强度: %.1fmm/hr" % res['precipitation'])
+        print("国标 AQI: %d" % res['aqi_chn'])
+        print("美标 AQI: %d" % res['aqi_usa'])
+        print("PM2.5: %.1fug/m3" % res['pm25'])
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("location")
+    args = parser.parse_args()
+    main(args)
