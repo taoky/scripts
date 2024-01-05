@@ -5,29 +5,55 @@ import argparse
 import os
 from xdg.BaseDirectory import xdg_config_home
 import json
+import sys
 
 
+# Get location from https://open.caiyunapp.com/images/c/cc/Adcode_release_2021-11-30.zip
 with open(os.path.join(xdg_config_home, "caiyun.json"), "r") as f:
     config = json.load(f)
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 
 def url_for(location: str) -> str:
     token = config["token"]
     lat, long = config["locations"][location]
-    return f"https://api.caiyunapp.com/v2.6/{token}/{long},{lat}/realtime.json&unit=metric:v2"
+    return f"https://api.caiyunapp.com/v2.6/{token}/{long},{lat}/weather.json&unit=metric:v2?alert=true"
 
 
 def parse_weather(data: dict, location_name: str):
     if data["status"] != "ok":
+        eprint("Weather status is not ok")
         return
     timestamp = data["server_time"] * 1000000000
     realtime = data["result"]["realtime"]
     if realtime["status"] != "ok":
+        eprint("Realtime status is not ok")
+        return
+    minutely = data["result"]["minutely"]
+    if minutely["status"] != "ok":
+        eprint("Minutely status is not ok")
+        return
+    hourly = data["result"]["hourly"]
+    if hourly["status"] != "ok":
+        eprint("Hourly status is not ok")
+        return
+    alert = data["result"]["alert"]
+    if alert["status"] != "ok":
+        eprint("Alert status is not ok")
         return
 
+
     weather_keys = [
-        "temperature", "humidity", "cloudrate", "visibility", "dswrf",
-        "pressure", "apparent_temperature",
+        "temperature",
+        "humidity",
+        "cloudrate",
+        "visibility",
+        "dswrf",
+        "pressure",
+        "apparent_temperature",
     ]
     weather = {k: realtime[k] for k in weather_keys}
     weather["cloudrate"] = float(weather["cloudrate"])
@@ -41,7 +67,15 @@ def parse_weather(data: dict, location_name: str):
     air_quality = realtime["air_quality"]
     weather["aqi_chn"] = air_quality["aqi"]["chn"]
     weather["aqi_usa"] = air_quality["aqi"]["usa"]
+    weather["aqi_chn_description"] = air_quality["description"]["chn"]
+    weather["aqi_usa_description"] = air_quality["description"]["usa"]
     weather["pm25"] = air_quality["pm25"]
+
+    weather["comfort"] = realtime["life_index"]["comfort"]["desc"]
+    weather["minutely_description"] = minutely["description"]
+    weather["hourly_description"] = hourly["description"]
+    weather["keypoint"] = data["result"]["forecast_keypoint"]
+    weather["alert"] = alert["content"]
 
     return {
         "measurement": "weather",
@@ -64,20 +98,31 @@ def main(args):
     if res is None:
         print("Error")
     else:
-        res = res['fields']
-        print("地表 2 米气温: %.1f°C" % res['temperature'])
-        print("地表 2 米湿度相对湿度: %.1f%%" % res['humidity'])
-        print("总云量: %.1f%%" % (res['cloudrate'] * 100))
-        print("地表水平能见度: %.1fkm" % res['visibility'])
-        print("向下短波辐射通量: %.1f W/M2" % res['dswrf'])
-        print("地面气压: %.1fPa" % res['pressure'])
-        print("体感温度: %.1f°C" % res['apparent_temperature'])
-        print("地表 10 米风速: %.1fkm/hr" % res['wind_speed'])
-        print("地表 10 米风向（从北顺时针）: %.1f°" % res['wind_direction'])
-        print("本地降水强度: %.1fmm/hr" % res['precipitation'])
-        print("国标 AQI: %d" % res['aqi_chn'])
-        print("美标 AQI: %d" % res['aqi_usa'])
-        print("PM2.5: %.1fug/m3" % res['pm25'])
+        res = res["fields"]
+        if res["alert"]:
+            print("=== 天气预警 ===")
+            print(res["alert"])
+        print(f"要点：{res['keypoint']}")
+        print(f"两小时内天气情况：{res['minutely_description']}")
+        print(f"未来 24 小时天气情况：{res['hourly_description']}")
+        print(f"当前舒适度：{res['comfort']}")
+        print()
+        print("=== 实时天气信息 ===")
+        print("地表 2 米气温: %.1f°C" % res["temperature"])
+        print("地表 2 米湿度相对湿度: %.1f%%" % res["humidity"])
+        print("体感温度: %.1f°C" % res["apparent_temperature"])
+        print("地表 10 米风速: %.1fkm/hr" % res["wind_speed"])
+        print("本地降水强度: %.1fmm/hr" % res["precipitation"])
+        print("国标 AQI: %d (%s)" % (res["aqi_chn"], res["aqi_chn_description"]))
+        print("美标 AQI: %d (%s)" % (res["aqi_usa"], res["aqi_usa_description"]))
+        print("PM2.5: %.1fug/m3" % res["pm25"])
+
+        print("=== 实时天气（技术信息）===")
+        print("总云量: %.1f%%" % (res["cloudrate"] * 100))
+        print("地表水平能见度: %.1fkm" % res["visibility"])
+        print("向下短波辐射通量: %.1f W/M2" % res["dswrf"])
+        print("地面气压: %.1fPa" % res["pressure"])
+        print("地表 10 米风向（从北顺时针）: %.1f°" % res["wind_direction"])
 
 
 if __name__ == "__main__":
