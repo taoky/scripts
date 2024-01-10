@@ -44,6 +44,10 @@ def parse_weather(data: dict, location_name: str):
     if alert["status"] != "ok":
         eprint("Alert status is not ok")
         return
+    daily = data["result"]["daily"]
+    if daily["status"] != "ok":
+        eprint("Daily status is not ok")
+        return
 
     weather_keys = [
         "temperature",
@@ -76,6 +80,17 @@ def parse_weather(data: dict, location_name: str):
     weather["hourly_description"] = hourly["description"]
     weather["keypoint"] = data["result"]["forecast_keypoint"]
     weather["alert"] = alert["content"]
+
+    daily_info = {}
+    for day in daily["temperature"]:
+        daily_info[day["date"]] = {
+            "min": day["min"],
+            "max": day["max"],
+            "avg": day["avg"],
+        }
+    for day in daily["skycon"]:
+        daily_info[day["date"]]["skycon"] = day["value"]
+    weather["daily"] = daily_info
 
     return {
         "measurement": "weather",
@@ -184,7 +199,11 @@ def main(args):
         print("国标 AQI: %d (%s)" % (res["aqi_chn"], res["aqi_chn_description"]))
         print("美标 AQI: %d (%s)" % (res["aqi_usa"], res["aqi_usa_description"]))
         print("PM2.5: %.1fug/m3" % res["pm25"])
-
+        print()
+        print("=== 天级别预报 ===")
+        for date, info in res["daily"].items():
+            print(f"{date.split('T')[0]}: 最低 {info['min']}°C, 最高 {info['max']}°C, 平均 {info['avg']}°C, {skycon_to_str(info['skycon'])}")
+        print()
         print("=== 实时天气（技术信息）===")
         print("总云量: %.1f%%" % (res["cloudrate"] * 100))
         print("地表水平能见度: %.1fkm" % res["visibility"])
