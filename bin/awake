@@ -14,11 +14,9 @@ libc = ctypes.CDLL("libc.so.6")
 # PR_SET_PDEATHSIG = 1, SIGKILL = 9
 handle = Popen(
     [
-        "gnome-session-inhibit",
-        "--inhibit",
-        "idle",
-        "--inhibit",
-        "suspend",
+        "systemd-inhibit",
+        "--what=idle:sleep:handle-lid-switch",
+        "--why=suspend inhibit by awake script",
         "sleep",
         args.time,
     ],
