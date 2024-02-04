@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # TODO: security and code cleanup
+# Create indexes for the database like this:
+# for i in *.db; sqlite3 "$i" "CREATE INDEX title_index_nocase ON definitions (title COLLATE NOCASE);"; end
 
 import argparse
 import sqlite3
@@ -156,9 +158,9 @@ def get_detected_language(word):
 
 def search_dictionary(conn, word, is_list):
     query = (
-        "SELECT title FROM definitions WHERE title GLOB ?"
+        "SELECT title FROM definitions WHERE title GLOB ? COLLATE NOCASE"
         if is_list
-        else "SELECT * FROM definitions WHERE title=?"
+        else "SELECT * FROM definitions WHERE title=? COLLATE NOCASE"
     )
     cursor = conn.cursor()
     return cursor.execute(query, (word,)).fetchall()
