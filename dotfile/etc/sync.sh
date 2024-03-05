@@ -16,4 +16,4 @@ rsync -a --delete /etc/modules-load.d/ modules-load.d
 rsync -a /etc/docker/daemon.json docker/daemon.json
 rsync -a --delete /etc/snapper/ snapper
 sudo rsync -a --delete /etc/sudoers.d .
-sudo chown taoky:taoky -R ./sudoers.d ./snapper
+sudo chown taoky:taoky -R ./sudoers.d ./snapper ./mkinitcpio.d
