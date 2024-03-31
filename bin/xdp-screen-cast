@@ -6,13 +6,7 @@
 # 2. Fix the bug that the script won't exit after the window is closed
 
 # Known bugs:
-# 1. Screencasting monitors without top bar may not work smoothly in GNOME
-#    (Seems that this has been resolved in GNOME 43)
-#    (Contents of xvimagesink window may not updated when not focused
-#     and glitches may appear when sharing with cursor.
-#     One workaround is to not maximize the xvimagesink window
-#     and select "Always on top" in mutter window manager)
-# 2. Sharing window in GNOME will bring a large black border around window
+# 1. Sharing window in GNOME will bring a large black border around window
 #    (And I don't know how to fix this: maybe gstreamer pipeline should know more about the window size?
 #     and the sink should self-resize dynamically to fit the window size?)
 
