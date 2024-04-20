@@ -1,7 +1,21 @@
 [user]
 	email = me@taoky.moe
 	name = taoky
+	signingKey = /home/taoky/.ssh/id_ed25519.pub
 [core]
 	editor = vim
+	pager = delta
 [alias]
 	adog = log --all --decorate --oneline --graph
+[gpg]
+	format = ssh
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true    # use n and N to move between diff sections
+	light = true
+[merge]
+	conflictstyle = diff3
+[diff]
+	colorMoved = default
+
