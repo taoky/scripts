@@ -6,7 +6,7 @@ Type = Package
 Target = *
 
 [Action]
-Description = Syncing filesystem after operation
+Description = Syncing filesystem after operation...
 Depends = coreutils
 When = PostTransaction
 Exec = /bin/sync
