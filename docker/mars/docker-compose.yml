@@ -11,4 +11,4 @@ services:
       - $XAUTHORITY:$XAUTHORITY
       - /run/user/1000/pipewire-0:/run/user/1000/pipewire-0
       - $HOME/.config/marsshooter:/home/marsshooter/.config/marsshooter
-      - /dev/dri:/dev/dri
+      - /dev/dri/renderD128:/dev/dri/renderD128

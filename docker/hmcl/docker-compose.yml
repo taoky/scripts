@@ -12,5 +12,5 @@ services:
       - /run/user/1000/pipewire-0:/tmp/pipewire-0
       - $HOME/.local/share/hmcl:/home/hmcl/.local/share/hmcl
       - $HOME/Games/Minecraft/.minecraft:/home/hmcl/.minecraft
-      - /dev/dri:/dev/dri
+      - /dev/dri/renderD128:/dev/dri/renderD128
     #network_mode: "host"
