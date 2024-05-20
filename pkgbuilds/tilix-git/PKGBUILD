@@ -54,6 +54,7 @@ build() {
   export LDFLAGS="$(echo -ne $LDFLAGS | sed -e 's/-flto=auto//')"
   export DFLAGS="--flto=full"
 
+  rm -rf build
   arch-meson "${pkgname%-git}" build
   meson compile -C build
 }
