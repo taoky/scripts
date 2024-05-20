@@ -17,6 +17,7 @@ depends=(
   'liblphobos'
   'libx11'
   'vte3'
+  'libunwind'
 )
 makedepends=(
   'git'

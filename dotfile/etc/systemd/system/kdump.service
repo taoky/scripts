@@ -4,7 +4,7 @@ After=local-fs.target
 
 [Service]
 RemainAfterExit=true
-ExecStart=/usr/bin/kexec -p /boot/kdump/vmlinuz-linux --initrd=/boot/kdump/initramfs-linux.img --append="root=UUID=f744de26-960b-4f60-ba3c-818d5b38c926 rootflags=subvol=@ single irqpoll maxcpus=1 reset_devices module_blacklist=iwlwifi,thunderbolt"
+ExecStart=/usr/bin/kexec -p /boot/kdump/vmlinuz-linux --initrd=/boot/kdump/initramfs-linux.img --append="root=UUID=f744de26-960b-4f60-ba3c-818d5b38c926 rootflags=subvol=@ single irqpoll maxcpus=1 reset_devices module_blacklist=iwlwifi,thunderbolt systemd.unit=kdump-save.service"
 ExecStop=/usr/bin/kexec -p -u
 Type=oneshot
 
