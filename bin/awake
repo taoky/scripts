@@ -10,13 +10,14 @@ args = parser.parse_args()
 import ctypes
 
 libc = ctypes.CDLL("libc.so.6")
+reason = "suspend inhibit by awake script"
 
 # PR_SET_PDEATHSIG = 1, SIGKILL = 9
 handle = Popen(
     [
         "systemd-inhibit",
         "--what=idle:sleep:handle-lid-switch",
-        "--why=suspend inhibit by awake script",
+        f"--why={reason}",
         "sleep",
         args.time,
     ],
@@ -35,6 +36,8 @@ def on_activate(app):
     win = Gtk.ApplicationWindow(application=app)
     win.set_opacity(0.0)
     win.set_default_size(0, 0)
+    flags = Gtk.ApplicationInhibitFlags.IDLE | Gtk.ApplicationInhibitFlags.SUSPEND
+    app.inhibit(win, flags, reason)
     win.present()
 
 
