@@ -16,7 +16,7 @@ reason = "suspend inhibit by awake script"
 handle = Popen(
     [
         "systemd-inhibit",
-        "--what=idle:sleep:handle-lid-switch",
+        "--what=handle-lid-switch",
         f"--why={reason}",
         "sleep",
         args.time,
@@ -36,7 +36,7 @@ def on_activate(app):
     win = Gtk.ApplicationWindow(application=app)
     win.set_opacity(0.0)
     win.set_default_size(0, 0)
-    flags = Gtk.ApplicationInhibitFlags.IDLE | Gtk.ApplicationInhibitFlags.SUSPEND
+    flags = Gtk.ApplicationInhibitFlags.IDLE
     app.inhibit(win, flags, reason)
     win.present()
 
