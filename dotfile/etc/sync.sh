@@ -15,5 +15,7 @@ rsync -a --delete /etc/tlp.d/ tlp.d
 rsync -a --delete /etc/modules-load.d/ modules-load.d
 rsync -a /etc/docker/daemon.json docker/daemon.json
 rsync -a --delete /etc/snapper/ snapper
+rsync -a /etc/subgid subgid
+rsync -a /etc/subuid subuid
 sudo rsync -a --delete /etc/sudoers.d .
 sudo chown taoky:taoky -R ./sudoers.d ./snapper ./mkinitcpio.d ./modules-load.d ./pacman.d
