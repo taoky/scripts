@@ -17,25 +17,45 @@ arch=(
   armv7h)
 license=(GPL)
 depends=(
+  alsa-lib
+  bash
+  cairo
   dconf
+  fontconfig
+  gcc-libs
   gcr-4
   geoclue
   geocode-glib-2
+  glib2
+  glibc
   gnome-desktop
   gsettings-desktop-schemas
   gtk3
   libcanberra-pulse
+  libcolord
+  libcups
   libgudev
   libgweather-4
+  libmm-glib
   libnm
   libnotify
+  libp11-kit
+  libpulse
   librsvg
   libwacom
+  libx11
+  libxext
+  libxfixes
+  libxi
   nss
-  pulseaudio
-  pulseaudio-alsa
+  pango
+  polkit
+  pulse-native-provider
   systemd
+  systemd-libs
   upower
+  wayland
+  xorg-xrdb
 )
 makedepends=(
   docbook-xsl
