@@ -13,6 +13,7 @@ done
 # Start openbox and wemeet
 echo "Starting openbox"
 DISPLAY=:114 openbox &
+DISPLAY=:114 xcompmgr &
 
 echo "Starting wemeet"
 DISPLAY=:114 flatpak run com.tencent.wemeet
