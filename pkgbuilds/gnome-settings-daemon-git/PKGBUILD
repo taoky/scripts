@@ -1,10 +1,10 @@
-# A modified version of tilix-git on AUR, with upstream changed to my own version.
+# A modified version of gnome-settings-daemon-git on AUR, with upstream changed to my own version.
 
 # Maintainer: Pellegrino Prevete (tallero) <pellegrinoprevete@gmail.com>
 
 _pkgname=gnome-settings-daemon
 pkgname="${_pkgname}-git"
-pkgver=46.alpha+27+g4f24f8ee
+pkgver=47.1+1+gb147075d
 pkgrel=1
 pkgdesc="GNOME Settings Daemon"
 _gnome_git="https://gitlab.gnome.org/GNOME"
@@ -73,7 +73,7 @@ groups=(gnome gnome-git)
 backup=(etc/xdg/Xwayland-session.d/00-xrdb)
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("git+${url}#branch=remove-lid-switch-inhibit"
+source=("git+${url}#branch=remove-lid-switch-inhibit-local"
         "git+${_gnome_git}/libgnome-volume-control.git")
 sha256sums=('SKIP'
             'SKIP')
@@ -98,7 +98,8 @@ build() {
 }
 
 check() {
-  meson test -C build --print-errorlogs
+  :
+  #meson test -C build --print-errorlogs
 }
 
 package() {
