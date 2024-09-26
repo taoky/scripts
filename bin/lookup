@@ -185,7 +185,7 @@ def generate_output(outputs, is_list, word=None):
 def main(args):
     word = args.word
     lang = args.lang or get_detected_language(word)
-    if not args.lang:
+    if not args.lang and not args.complete:
         print("Auto detected language: " + lang)
 
     outputs = []
@@ -193,16 +193,17 @@ def main(args):
         if lang in dic[1] or args.all:
             dictionary_name = dic[0]
             conn = sqlite3.connect(os.path.join(DATAFOLDER, dic[0] + ".db"))
-            results = search_dictionary(conn, word, args.list)
+            results = search_dictionary(conn, word, args.list or args.complete)
             conn.close()
 
             if not results:
-                print(f"Not found in {dictionary_name}")
+                if not args.complete:
+                    print(f"Not found in {dictionary_name}")
                 if args.list:
                     outputs.append(f"<p>Not found in {dictionary_name}</p>")
                 continue
 
-            if not args.list:
+            if not args.list and not args.complete:
                 print(f"Found in {dictionary_name}:")
                 outputs.extend(
                     [
@@ -217,17 +218,29 @@ def main(args):
                     ]
                 )
 
+            # list or complete
             else:
-                print(f"Found in {dictionary_name}:")
-                outputs.append(f"<p>Found in {dictionary_name}:</p>")
-                for result in results:
-                    outputs.append(f"<p>{result[0]}</p>")
-                    print(result[0])
+                if not args.complete:
+                    print(f"Found in {dictionary_name}:")
+                    outputs.append(f"<p>Found in {dictionary_name}:</p>")
+                    for result in results:
+                        outputs.append(f"<p>{result[0]}</p>")
+                        print(result[0])
+                else:
+                    for result in results:
+                        outputs.append(result[0])
 
     if not outputs:
         return False
 
-    output = generate_output(outputs, args.list, word)
+    if not args.complete:
+        output = generate_output(outputs, args.list, word)
+    else:
+        # dedup and output and exit
+        output = sorted(set(outputs))
+        for word in output:
+            print(word)
+        return True
 
     if not args.list:
         with open("/tmp/lookup_result.html", "w") as f:
@@ -302,11 +315,19 @@ if __name__ == "__main__":
         action="store_true",
     )
     parser.add_argument(
+        "--complete",
+        help="(For shell completion script only) tab-completions mode",
+        action="store_true",
+    )
+    parser.add_argument(
         "--noopen", help="do not open result in browser", action="store_true"
     )
     parser.add_argument("--all", help="lookup in all dictionaries", action="store_true")
     parser.add_argument("--server", help="run as server", action="store_true")
     args = parser.parse_args()
+    if args.complete and args.list:
+        print("--complete and --list are conflicted.")
+        exit(1)
     if args.server:
         with open("/tmp/lookup_server.html", "w") as f:
             f.write(SERVER_PAGE)
