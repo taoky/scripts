@@ -6,3 +6,4 @@ user_pref("font.name.monospace.x-western", "JetBrains Mono");
 user_pref("middlemouse.paste", false);
 
 user_pref("media.ffmpeg.vaapi.enabled", true);
+user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
