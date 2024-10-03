@@ -1,0 +1,41 @@
+# Modified from https://github.com/flathub/net.sourceforge.mars-game/blob/master/net.sourceforge.mars-game.json
+
+app-id: net.sourceforge.mars-game
+runtime: org.freedesktop.Platform
+runtime-version: "24.08"
+sdk: org.freedesktop.Sdk
+finish-args:
+  - --device=dri
+  - --socket=x11
+  - --socket=pulseaudio
+command: marsshooter
+rename-appdata-file: marsshooter.appdata.xml
+rename-desktop-file: marsshooter.desktop
+rename-icon: marsshooter
+modules:
+  - name: SFML
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DSFML_INSTALL_PKCONFIG_FILES=TRUE
+    sources:
+      - type: archive
+        url: http://www.sfml-dev.org/files/SFML-2.5.1-sources.zip
+        sha256: bf1e0643acb92369b24572b703473af60bac82caf5af61e77c063b779471bb7f
+  - name: taglib
+    buildsystem: cmake-ninja
+    cleanup:
+      - /bin
+    config-opts:
+      - -DBUILD_SHARED_LIBS=ON
+    sources:
+      - type: archive
+        url: http://taglib.org/releases/taglib-1.11.1.tar.gz
+        sha256: b6d1a5a610aae6ff39d93de5efd0fdc787aa9e9dc1e7026fa4c961b26563526b
+  - name: mars-game
+    buildsystem: cmake-ninja
+    config-opts:
+      - -Dmars_EXE_DEST_DIR=/app/bin
+      - -Dmars_DATA_DEST_DIR=/app/share/marsshooter
+    sources:
+      - type: git
+        url: https://github.com/taoky/M.A.R.S.

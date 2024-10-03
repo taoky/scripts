@@ -8,10 +8,18 @@ PDF -> Markdown
 
 Build:
 
-```console
+```shell
 docker build -t local/marker .
+# or
+podman build -t local/marker .
 ```
 
-```console
+```shell
 docker run --rm -v $(pwd):/workspace local/marker poetry run python convert_single.py /workspace/your.pdf /workspace/your.md
+# or
+podman run --rm -v $(pwd):/workspace local/marker poetry run python convert_single.py /workspace/your.pdf /workspace/your.md
+```
+
+```shell
+./convert.sh some.pdf ~/tmp/
 ```

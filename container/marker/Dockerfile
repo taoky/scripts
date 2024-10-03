@@ -1,4 +1,4 @@
-FROM ustclug/debian:bookworm-slim
+FROM docker.io/ustclug/debian:bookworm-slim
 
 ARG COMMIT=ad6c97ca916084b225cc3319637449efbd4b0cb6
 

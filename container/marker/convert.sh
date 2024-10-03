@@ -23,6 +23,7 @@ if [ -d "$output" ]; then
     touch "$output"
 fi
 
-docker run --rm -v "$input":/workspace/"$filename" -v "$output":/workspace/result/result.md local/marker poetry run python convert_single.py /workspace/"$filename" /workspace/result/result.md
+# podman or docker...
+podman run --rm -v "$input":/workspace/"$filename" -v "$output":/workspace/result/result.md local/marker poetry run python convert_single.py /workspace/"$filename" /workspace/result/result.md
 
 echo "Result is in $output"

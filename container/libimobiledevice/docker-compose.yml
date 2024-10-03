@@ -1,9 +1,9 @@
-version: "2"
 services:
   shell:
     build: .
     volumes:
-      - $HOME/iOSBackup:/backup
+      # replace this to your own dir
+      - /home/taoky/iOSBackup:/backup
       # usbmuxd will recreate /run/usbmuxd when reconnected
       # so let's just mount /run as a whole
       - /run/:/run/
