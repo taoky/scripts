@@ -5,7 +5,6 @@
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
     "update.mode": "none",
-    "git.ignoreMissingGitWarning": true,
     "editor.guides.bracketPairs": "active",
     "editor.selectionClipboard": false,
     "editor.inlineSuggest.enabled": true,
@@ -42,7 +41,6 @@
     "[html]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "diffEditor.ignoreTrimWhitespace": false,
     "[typescriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
@@ -59,10 +57,23 @@
         "MD012": false,
         "MD030": false,
         "MD033": false,
+        "MD041": false,
         "MD046": false,
         "MD049": {
           "style": "asterisk",
         },
         "MD053": false,
     },
+    "mesonbuild.downloadLanguageServer": true,
+    "git.defaultBranchName": "master",
+    "[markdown]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "d.dubCompiler": "ldc2",
+    "d.stdlibPath": "auto",
+    "d.dubPath": "/usr/bin/dub",
+    "d.servedPath": "/home/taoky/.local/share/code-d/bin/serve-d",
+    "github.copilot.editor.enableAutoCompletions": true,
+    "workbench.editor.empty.hint": "hidden",
+    "lldb.suppressUpdateNotifications": true,
 }
