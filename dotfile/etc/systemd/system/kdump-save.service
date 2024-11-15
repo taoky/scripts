@@ -6,11 +6,13 @@ After=local-fs.target systemd-udev-trigger.service
 
 [Service]
 Type=oneshot
-#ExecStart=/bin/sh -c 'mkdir -p /var/crash/ && /usr/bin/makedumpfile -c -d 31 /proc/vmcore "/var/crash/crashdump-$$(date +%%F-%%T)"'
+ExecStartPre=mkdir -p /var/crash
+#ExecStart=/bin/sh -c '/usr/bin/makedumpfile -c -d 31 /proc/vmcore "/var/crash/crashdump-$$(date +%%F-%%T)"'
 # Arch Linux kernel currently does not have debugsymbol...
 # https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/2
-ExecStart=/bin/sh -c 'mkdir -p /var/crash/ && /usr/bin/makedumpfile --dump-dmesg /proc/vmcore "/var/crash/crashdump-$$(date +%%F-%%T)".dmesg'
-ExecStopPost=/usr/bin/systemctl reboot
+ExecStart=/bin/sh -c '/usr/bin/makedumpfile --dump-dmesg /proc/vmcore "/var/crash/crashdump-$$(date +%%F-%%T)".dmesg'
+ExecStopPost=/usr/bin/sync
+ExecStopPost=/usr/bin/reboot -f
 UMask=0077
 StandardInput=tty-force
 StandardOutput=inherit
