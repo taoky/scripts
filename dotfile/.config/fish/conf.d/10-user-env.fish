@@ -3,7 +3,6 @@ set -x EDITOR vim
 set -x SYSTEMD_EDITOR vim
 set -x TLDR_CACHE_MAX_AGE 1680
 set -x JQ_COLORS "1;30:0;39:0;39:0;39:0;32:1;39:1;39"
-set -x DOCKER_HOST unix://$XDG_RUNTIME_DIR/docker.sock
 
 # User appended path
 fish_add_path ~/.cargo/bin

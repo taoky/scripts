@@ -3,3 +3,4 @@ if status is-login; and status is-interactive
 end
 
 alias kubectl="minikube kubectl --"
+alias tmpctr="podman run -it --rm --log-driver none"
