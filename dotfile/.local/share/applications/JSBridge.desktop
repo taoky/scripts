@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=JSBridge
-Exec=echo %u
-Type=Application
-Terminal=false
-NoDisplay=true
-MimeType=x-scheme-handler/jsbridge;
