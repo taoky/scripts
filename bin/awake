@@ -5,7 +5,7 @@ import ctypes
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("time", type=str, default="1h")
+parser.add_argument("time", type=str, nargs="?", default="1h")
 args = parser.parse_args()
 
 libc = ctypes.CDLL("libc.so.6")
