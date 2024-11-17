@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 from subprocess import Popen
 import argparse
+import ctypes
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("time", type=str)
+parser.add_argument("time", type=str, default="1h")
 args = parser.parse_args()
-
-import ctypes
 
 libc = ctypes.CDLL("libc.so.6")
 reason = "suspend inhibit by awake script"
