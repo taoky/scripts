@@ -7,6 +7,10 @@ import re
 import math
 from collections import defaultdict
 from typing import DefaultDict
+from xml.dom import minidom
+
+# (archlinuxcn repo) sudo pacman -S python-biliass
+from biliass import convert_to_ass
 
 # https://github.com/xmcp/pakku.js/blob/9a8c59591d9d9a17dfa39595d995d2f08c781014/pakkujs/core/pinyin_dict.ts#L14
 PINYIN_DICT_RAW = {
@@ -703,11 +707,13 @@ class DanmukuObject:
     sendtime: int
     id: str
     pool: int
+    weight: int
 
 
 # https://github.com/xmcp/pakku.js/blob/9a8c59591d9d9a17dfa39595d995d2f08c781014/pakkujs/protocol/interface_xml.ts#L25C1-L58C2
-def get_objects(tree: ET.ElementTree) -> list[DanmukuObject]:
+def get_objects(tree: ET.ElementTree) -> tuple[list[DanmukuObject], dict[str, str]]:
     res = []
+    conf = {}
 
     root = tree.getroot()
     if root.tag.lower() != "i":
@@ -728,13 +734,13 @@ def get_objects(tree: ET.ElementTree) -> list[DanmukuObject]:
                     sendtime=int(attr[4]),
                     id=attr[7],
                     pool=int(attr[5]),
+                    weight=int(attr[8]),
                 )
             )
         else:
-            # conf[f"xml_{elem.tag.lower()}"] = elem.text if elem.text else ""
-            pass  # we don't need the extra thing here...
+            conf[f"xml_{elem.tag.lower()}"] = elem.text if elem.text else ""
 
-    return res
+    return res, conf
 
 
 @dataclass
@@ -799,8 +805,10 @@ def combine(objects: list[DanmukuObject]) -> list[ClusteredDanmuku]:
 
     return clusters
 
+
 # https://github.com/xmcp/pakku.js/blob/9a8c59591d9d9a17dfa39595d995d2f08c781014/pakkujs/core/post_combine.ts#L37
 SUBSCRIPT_CHARS = [chr(0x2080 + x) for x in range(10)]
+
 
 def to_subscript(x: int) -> str:
     ret = SUBSCRIPT_CHARS[x % 10]
@@ -809,10 +817,11 @@ def to_subscript(x: int) -> str:
         ret = SUBSCRIPT_CHARS[x % 10] + ret
     return ret
 
+
 def post_combine(clusters: list[ClusteredDanmuku]) -> list[DanmukuObject]:
     def calc_enlarge_rate(cnt: int) -> float:
         return 1 if cnt < 5 else math.log(cnt, 5)
-    
+
     def build_text(cluster: ClusteredDanmuku, s: str) -> str:
         MARK_THRESHOLD = 1
         cnt = len(cluster.peers)
@@ -843,14 +852,66 @@ def post_combine(clusters: list[ClusteredDanmuku]) -> list[DanmukuObject]:
     return res
 
 
+def construct_xml(dms: list[DanmukuObject], header: dict[str, str]) -> str:
+    # Create the root <i> element
+    i_elem = ET.Element("i")
+
+    # Add the static fields as sub-elements
+    ET.SubElement(i_elem, "chatserver").text = "chat.bilibili.com"
+    ET.SubElement(i_elem, "chatid").text = str(header.get("xml_chatid", 0))
+    ET.SubElement(i_elem, "mission").text = "0"
+    ET.SubElement(i_elem, "maxlimit").text = str(
+        header.get("xml_maxlimit", len(dms) + 1)
+    )
+    ET.SubElement(i_elem, "state").text = "0"
+    ET.SubElement(i_elem, "real_name").text = "0"
+
+    # Loop through the danmu objects and create <d> elements
+    for d in dms:
+        elem = ET.Element("d")
+        # The <d> element has only text content and a 'p' attribute
+        elem.text = d.content
+        attr = [
+            d.time_ms / 1000,  # 0
+            d.mode,  # 1
+            d.fontsize,  # 2
+            d.color,  # 3
+            d.sendtime,  # 4
+            d.pool,  # 5
+            d.sender_hash,  # 6
+            d.id,  # 7
+            d.weight,  # 8
+        ]
+        elem.set("p", ",".join(map(str, attr)))
+        i_elem.append(elem)
+
+    # Convert the ElementTree to a string
+    xml_str = ET.tostring(i_elem, encoding="unicode")
+
+    # Prettify the XML by using minidom
+    dom = minidom.parseString(xml_str)
+    pretty_xml_as_str = dom.toprettyxml(indent="  ")
+
+    # Further format to match the requested formatting from the JavaScript version
+    # Removing extra new lines introduced by minidom (it introduces too many new lines)
+    formatted_str = "".join(
+        [line for line in pretty_xml_as_str.splitlines() if line.strip()]
+    )
+
+    # Replace <d p=...> to have new lines as in the JS version
+    return formatted_str.replace("<d p=", "\n  <d p=").replace("</i>", "\n</i>")
+
+
 if __name__ == "__main__":
-    if len(sys.argv) <= 1:
-        print(f"Usage: {sys.argv[0]} [XMLFILE]")
+    if len(sys.argv) != 4:
+        print(f"Usage: {sys.argv[0]} [XMLFILE] [WIDTH] [HEIGHT]")
         sys.exit(1)
     tree = ET.parse(sys.argv[1])
-    objects = get_objects(tree)
+    width = int(sys.argv[2])
+    height = int(sys.argv[3])
+    objects, header = get_objects(tree)
     objects.sort(key=lambda obj: obj.time_ms)
     clustered = combine(objects)
     final_dms = post_combine(clustered)
-    for i in final_dms:
-        print(i)
+    result_xml = construct_xml(final_dms, header)
+    print(convert_to_ass(result_xml, width, height, font_size=50, duration_marquee=15, duration_still=10, text_opacity=0.8, reduce_comments=False))

@@ -1,0 +1,71 @@
+#!/usr/bin/python3
+import subprocess
+import argparse
+import json
+from pathlib import Path
+import os
+
+
+YT_DLP = ["yt-dlp", "--cookies-from-browser=firefox"]
+MPV = ["mpv", "--ytdl-raw-options=cookies-from-browser=firefox"]
+POSTSCRIPT = Path.home() / "scripts" / "bin" / "bilibili_danmuku_process.py"
+
+
+def main(args):
+    print("Getting video info...")
+    formats = subprocess.run(
+        YT_DLP + ["-J", args.url],
+        stdout=subprocess.PIPE,
+        check=True,
+        text=True,
+    ).stdout
+    formats = json.loads(formats)["requested_formats"]
+    width = None
+    height = None
+    for i in formats:
+        if i.get("width") and i.get("height"):
+            width = i["width"]
+            height = i["height"]
+            break
+    assert width and height
+
+    print("Download subtitles and convert...")
+    output = subprocess.run(
+        YT_DLP
+        + ["--skip-download", "--sub-langs", "danmaku", "--write-subs", args.url],
+        check=True,
+        cwd="/tmp/",
+        text=True,
+        stdout=subprocess.PIPE,
+    ).stdout.splitlines()
+    filename = None
+    for i in output:
+        if i.startswith("[info] Writing video subtitles to:"):
+            filename = i.removeprefix("[info] Writing video subtitles to:").strip()
+            break
+    assert filename
+    xml_path = Path("/tmp/") / filename
+    ass_path = xml_path.with_stem("ass")
+
+    print("Processing danmuku file to ass...")
+    with open(ass_path, "w") as f:
+        subprocess.run(
+            [str(POSTSCRIPT), str(xml_path), str(width), str(height)],
+            check=True,
+            text=True,
+            stdout=f,
+        )
+
+    print("Done, let mpv play it...")
+    # Play it finally...
+    os.execvp(
+        "mpv",
+        MPV + [f"--sub-file={ass_path}", args.url],
+    )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser("mpv-bili")
+    parser.add_argument("url", type=str)
+    args = parser.parse_args()
+    main(args)
