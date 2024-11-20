@@ -19,10 +19,14 @@ def main(args):
         check=True,
         text=True,
     ).stdout
-    formats = json.loads(formats)["requested_formats"]
+    formats = json.loads(formats)
+    requested_formats = formats.get("requested_formats")
+    if requested_formats is None:
+        # multiple parts video?
+        requested_formats = formats["entries"][0]["requested_formats"]
     width = None
     height = None
-    for i in formats:
+    for i in requested_formats:
         if i.get("width") and i.get("height"):
             width = i["width"]
             height = i["height"]
