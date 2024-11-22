@@ -49,7 +49,7 @@ def main(args):
             break
     assert filename
     xml_path = Path("/tmp/") / filename
-    ass_path = xml_path.with_stem("ass")
+    ass_path = xml_path.with_suffix(".ass")
 
     print("Processing danmuku file to ass...")
     with open(ass_path, "w") as f:
