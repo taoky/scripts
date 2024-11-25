@@ -76,4 +76,8 @@
     "github.copilot.editor.enableAutoCompletions": true,
     "workbench.editor.empty.hint": "hidden",
     "lldb.suppressUpdateNotifications": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "window.autoDetectColorScheme": true,
+    "workbench.preferredDarkColorTheme": "Solarized Dark",
+    "workbench.preferredLightColorTheme": "Solarized Light",
 }
