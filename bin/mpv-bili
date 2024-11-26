@@ -7,7 +7,7 @@ import os
 
 
 YT_DLP = ["yt-dlp", "--cookies-from-browser=firefox"]
-MPV = ["mpv", "--ytdl-raw-options=cookies-from-browser=firefox"]
+MPV = ["mpv", "--ytdl-raw-options=cookies-from-browser=firefox", "--ytdl-raw-options-append=sub-langs=all,-danmaku"]
 POSTSCRIPT = Path.home() / "scripts" / "bin" / "bilibili_danmuku_process.py"
 
 
