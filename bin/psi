@@ -111,14 +111,15 @@ def main(args):
                 return i[4]
 
     table.sort(key=select, reverse=True)
-    table = table[: args.n]
+    if args.n != -1:
+        table = table[: args.n]
 
     print(tabulate(table, headers=["Name", "CPU", "IO", "Memory", "IRQ"]))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Listing PSI stats")
-    parser.add_argument("-n", type=int, default=10, help="List N top items")
+    parser.add_argument("-n", type=int, default=10, help="List N top items, -1 => all")
     parser.add_argument("--type", choices=("some", "full"), default="some")
     parser.add_argument("--item", choices=("10", "60", "300", "total"), default="10")
     parser.add_argument(
