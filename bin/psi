@@ -1,0 +1,128 @@
+#!/usr/bin/python3
+
+from pathlib import Path
+import argparse
+from dataclasses import dataclass
+from typing import Optional
+from tabulate import tabulate
+
+CGROUP_MNT = Path("/sys/fs/cgroup")
+
+
+@dataclass
+class PSI:
+    avg10: float
+    avg60: float
+    avg300: float
+    total: int
+
+
+@dataclass
+class GroupPSI:
+    # tuple[PSI, PSI] => some, full
+    memory: tuple[PSI, PSI]
+    cpu: tuple[PSI, PSI]
+    irq: PSI
+    io: tuple[PSI, PSI]
+
+
+def parse_pressure(p: Path) -> tuple[Optional[PSI], PSI]:
+    some = None
+    full = None
+
+    def parse_line(l: list[str]) -> PSI:
+        return PSI(
+            float(l[0].split("=")[1]),
+            float(l[1].split("=")[1]),
+            float(l[2].split("=")[1]),
+            int(l[3].split("=")[1]),
+        )
+
+    with open(p) as f:
+        for l in f:
+            parts = l.strip().split(" ")
+            if parts[0] == "some":
+                some = parse_line(parts[1:])
+            elif parts[0] == "full":
+                full = parse_line(parts[1:])
+
+    assert full is not None
+    return (some, full)
+
+
+def get_leaf_folders(parent: Path):
+    return (path for path in parent.rglob("*") if path.is_dir())
+
+
+def get_value(v: tuple[PSI, PSI] | PSI, args):
+    psi: PSI
+    if type(v) is PSI:
+        psi = v
+    else:
+        match args.type:
+            case "some":
+                psi = v[0]
+            case _:
+                psi = v[1]
+
+    match args.item:
+        case "10":
+            return psi.avg10
+        case "60":
+            return psi.avg60
+        case "300":
+            return psi.avg300
+        case _:
+            return psi.total
+
+
+def main(args):
+    info: dict[Path, GroupPSI] = {}
+    for cgroup in get_leaf_folders(CGROUP_MNT):
+        io = parse_pressure(cgroup / "io.pressure")
+        irq = parse_pressure(cgroup / "irq.pressure")
+        cpu = parse_pressure(cgroup / "cpu.pressure")
+        memory = parse_pressure(cgroup / "memory.pressure")
+        psi = GroupPSI(memory, cpu, irq[1], io)
+        info[cgroup] = psi
+
+    table = []
+    for p, v in info.items():
+        table.append(
+            (
+                p.name,
+                get_value(v.cpu, args),
+                get_value(v.io, args),
+                get_value(v.memory, args),
+                get_value(v.irq, args),
+            )
+        )
+
+    # sort and filter
+    def select(i):
+        match args.sortby:
+            case "cpu":
+                return i[1]
+            case "io":
+                return i[2]
+            case "memory":
+                return i[3]
+            case "irq":
+                return i[4]
+
+    table.sort(key=select, reverse=True)
+    table = table[: args.n]
+
+    print(tabulate(table, headers=["Name", "CPU", "IO", "Memory", "IRQ"]))
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser("Listing PSI stats")
+    parser.add_argument("-n", type=int, default=10, help="List N top items")
+    parser.add_argument("--type", choices=("some", "full"), default="some")
+    parser.add_argument("--item", choices=("10", "60", "300", "total"), default="10")
+    parser.add_argument(
+        "--sortby", choices=("io", "irq", "cpu", "memory"), default="cpu"
+    )
+    args = parser.parse_args()
+    main(args)
