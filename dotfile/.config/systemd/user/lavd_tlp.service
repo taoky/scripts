@@ -1,0 +1,9 @@
+[Unit]
+Description=Switch lavd scheduler mode for tlp-setup laptops 
+
+[Service]
+Type=simple
+ExecStart=/home/taoky/.local/bin/lavd_tlp
+
+[Install]
+WantedBy=default.target
