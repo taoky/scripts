@@ -14,3 +14,5 @@ fish_add_path /usr/lib/rustup/bin
 # "If you installed Nix from the official repositories, you must add the ~/.nix-profile/bin directory to your PATH manually."
 fish_add_path ~/.nix-profile/bin
 
+# BCC tools
+fish_add_path /usr/share/bcc/tools/
