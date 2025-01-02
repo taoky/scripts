@@ -9,13 +9,11 @@ pkgrel=1
 pkgdesc="GNOME Settings Daemon"
 _gnome_git="https://gitlab.gnome.org/GNOME"
 url="https://gitlab.gnome.org/taoky/${_pkgname}"
-arch=(
-  x86_64
-  i686
-  pentium4
-  aarch64
-  armv7h)
-license=(GPL)
+arch=(x86_64)
+license=(
+  GPL-2.0-or-later
+  LGPL-2.0-or-later
+)
 depends=(
   alsa-lib
   bash
@@ -60,6 +58,7 @@ depends=(
 makedepends=(
   docbook-xsl
   git
+  glib2-devel
   libxslt
   meson
   python
@@ -99,8 +98,7 @@ build() {
 }
 
 check() {
-  :
-  #meson test -C build --print-errorlogs
+  meson test -C build --print-errorlogs
 }
 
 package() {
