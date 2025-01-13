@@ -1,6 +1,6 @@
 set -x PIP_REQUIRE_VIRTUALENV true
-set -x EDITOR vim
-set -x SYSTEMD_EDITOR vim
+set -x EDITOR nvim
+set -x SYSTEMD_EDITOR nvim
 set -x TLDR_CACHE_MAX_AGE 1680
 set -x JQ_COLORS "1;30:0;39:0;39:0;39:0;32:1;39:1;39"
 
