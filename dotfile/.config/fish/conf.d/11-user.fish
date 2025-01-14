@@ -4,3 +4,4 @@ end
 
 alias kubectl="minikube kubectl --"
 alias tmpctr="podman run -it --rm --log-driver none"
+alias vim="nvim"
