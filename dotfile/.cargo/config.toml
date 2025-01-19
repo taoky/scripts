@@ -1,0 +1,9 @@
+[source.crates-io]
+replace-with = 'ustc'
+
+[source.ustc]
+registry = "sparse+https://mirrors.ustc.edu.cn/crates.io-index/"
+
+[patch.crates-io]
+# clickbait packages
+tokio-utils = { git = "https://example.com/nonexist.git" }
