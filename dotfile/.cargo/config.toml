@@ -1,9 +1,9 @@
+# https://github.com/taoky/cargo-blocklist
+paths = ["/home/taoky/Projects/cargo-blocklist/"]
+
 [source.crates-io]
 replace-with = 'ustc'
 
 [source.ustc]
 registry = "sparse+https://mirrors.ustc.edu.cn/crates.io-index/"
 
-[patch.crates-io]
-# clickbait packages
-tokio-utils = { git = "https://example.com/nonexist.git" }
