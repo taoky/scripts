@@ -31,6 +31,8 @@ endfunction
 
 " Buggy...
 autocmd VimEnter * call echoraw(&t_RB)
+" Debian 12 vim does not support TermResponseAll, you have to comment it out
+" and manually call DetectTermBG.
 autocmd TermResponseAll * call s:UpdateBackgroundFromTermColor()
 
 command! DetectTermBG call s:UpdateBackgroundFromTermColor()
