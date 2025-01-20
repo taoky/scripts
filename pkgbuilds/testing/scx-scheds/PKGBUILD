@@ -1,0 +1,54 @@
+# Maintainer: Peter Jung <ptr1337@archlinux.org>
+# Contributor: Tejun Heo <tj@kernel.org>
+# Contributor: Piotr Górski <lucjan.lucjanov@gmail.com>
+
+pkgname=scx-scheds
+_gitname=scx
+pkgver=1.0.8
+pkgrel=2
+pkgdesc='sched_ext schedulers and tools'
+url='https://github.com/sched-ext/scx'
+arch=('x86_64')
+backup=('etc/default/scx')
+license=('GPL-2.0-only')
+depends=(
+  bash
+  bpf
+  gcc-libs
+  glibc
+  jq
+  libbpf
+  libelf
+  zlib
+)
+makedepends=(
+  clang
+  git
+  llvm
+  llvm-libs
+  meson
+  python
+  rust
+)
+options=(!lto)
+source=("git+https://github.com/sched-ext/scx#tag=v${pkgver}"
+	"https://github.com/taoky/scx/compare/main...fix-loader-switch-race.patch")
+sha256sums=('0971802cf9648267554de6ccc82a3479c6cc7fe37bb55021ad93838441ece58e'
+	    'SKIP')
+
+prepare() {
+  cd $_gitname
+  patch -p1 < "$srcdir/main...fix-loader-switch-race.patch"
+}
+
+build() {
+  cd $_gitname
+  arch-meson . build -D openrc=disabled -D libbpf_a=disabled -D cargo_home="$srcdir"/scx
+  meson compile -C build
+}
+
+package() {
+  cd $_gitname
+  meson install -C build --destdir "${pkgdir}"
+}
+
