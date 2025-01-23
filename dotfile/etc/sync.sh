@@ -17,6 +17,8 @@ rsync -a /etc/docker/daemon.json docker/daemon.json
 rsync -a --delete /etc/snapper/ snapper
 rsync -a /etc/subgid subgid
 rsync -a /etc/subuid subuid
+rsync -a /etc/resolvconf.conf resolvconf.conf
+rsync -a /etc/dnsmasq.conf dnsmasq.conf
 rsync -a /etc/NetworkManager/conf.d/dns.conf NetworkManager/conf.d/
 sudo rsync -a --delete /etc/sudoers.d .
 sudo chown taoky:taoky -R ./sudoers.d ./snapper ./mkinitcpio.d ./modules-load.d ./pacman.d
