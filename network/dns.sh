@@ -9,7 +9,8 @@ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
 case $1 in
     local)
-        ln -sf "$SCRIPT_DIR/resolv.conf" /etc/resolv.conf
+        echo -e "search taoky.moe\nnameserver 127.0.0.1" > /etc/resolv.conf.local
+        mv /etc/resolv.conf.local /etc/resolv.conf
         ;;
     nm)
         ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
