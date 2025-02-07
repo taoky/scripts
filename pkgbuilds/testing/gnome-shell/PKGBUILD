@@ -8,7 +8,7 @@ pkgname=(
   gnome-shell
   gnome-shell-docs
 )
-pkgver=47.3
+pkgver=47.4
 pkgrel=100
 epoch=1
 pkgdesc="Next generation desktop shell"
@@ -79,7 +79,7 @@ source=(
   "git+https://gitlab.gnome.org/GNOME/libgnome-volume-control.git#commit=5f9768a2eac29c1ed56f1fbb449a77a3523683b6"
   "https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3460.patch"
 )
-b2sums=('22b681e936f231f254fe701a7c9f499031235615afbe401403a9960e7b912838e590ec3f04226a9a7e89173c3d14487234cfe091e743340f54428150a44d189d'
+b2sums=('d8e8653f0e2a645390b95e16b45efd80501ce829ada0671b7c1cd597575ea64d2f650ee4771cbe60d41175bc7823eabe8dde1f58ba3c6b2cee6166b6f5c1f45a'
         'e31ae379039dfc345e8032f7b9803a59ded075fc52457ba1553276d3031e7025d9304a7f2167a01be2d54c5e121bae00a2824a9c5ccbf926865d0b24520bb053'
         'SKIP')
 
