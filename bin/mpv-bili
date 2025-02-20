@@ -7,7 +7,11 @@ import os
 
 
 YT_DLP = ["yt-dlp", "--cookies-from-browser=firefox"]
-MPV = ["mpv", "--ytdl-raw-options=cookies-from-browser=firefox", "--ytdl-raw-options-append=sub-langs=all,-danmaku"]
+MPV = [
+    "mpv",
+    "--ytdl-raw-options=cookies-from-browser=firefox",
+    "--ytdl-raw-options-append=sub-langs=all,-danmaku",
+]
 POSTSCRIPT = Path.home() / "scripts" / "bin" / "bilibili_danmuku_process.py"
 
 
@@ -72,4 +76,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser("mpv-bili")
     parser.add_argument("url", type=str)
     args = parser.parse_args()
+    # Check if starts with "av" or "bv"
+    url_lower = args.url.lower()
+    if url_lower.startswith("av") or url_lower.startswith("bv"):
+        args.url = "https://www.bilibili.com/video/" + args.url
     main(args)
