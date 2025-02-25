@@ -114,9 +114,9 @@ vim.opt.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function()
-	vim.opt.clipboard = "unnamedplus"
-end)
+--vim.schedule(function()
+--	vim.opt.clipboard = "unnamedplus"
+--end)
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -311,6 +311,10 @@ require("lazy").setup({
 					F11 = "<F11>",
 					F12 = "<F12>",
 				},
+			},
+
+			triggers = {
+				{ "<leader>", mode = { "v" } },
 			},
 
 			-- Document existing key chains
@@ -733,7 +737,7 @@ require("lazy").setup({
 			formatters_by_ft = {
 				lua = { "stylua" },
 				-- Conform can also run multiple formatters sequentially
-				-- python = { "isort", "black" },
+				python = { "black" },
 				--
 				-- You can use 'stop_after_first' to run the first available formatter from the list
 				-- javascript = { "prettierd", "prettier", stop_after_first = true },
