@@ -1,0 +1,257 @@
+#!/usr/bin/python3
+# Usage: wl-paste | lyricshtml2romanji
+# Deps on bs4, html5lib
+
+from bs4 import BeautifulSoup
+import sys
+
+# HIRAGANA + KATAKANA TO ROMAJI MAPPING
+HIRAGANA_KATAKANA_TO_ROMAJI = {
+    # Vowels
+    "あ": "a",
+    "い": "i",
+    "う": "u",
+    "え": "e",
+    "お": "o",
+    "ア": "a",
+    "イ": "i",
+    "ウ": "u",
+    "エ": "e",
+    "オ": "o",
+    # K-row
+    "か": "ka",
+    "き": "ki",
+    "く": "ku",
+    "け": "ke",
+    "こ": "ko",
+    "カ": "ka",
+    "キ": "ki",
+    "ク": "ku",
+    "ケ": "ke",
+    "コ": "ko",
+    # S-row
+    "さ": "sa",
+    "し": "shi",
+    "す": "su",
+    "せ": "se",
+    "そ": "so",
+    "サ": "sa",
+    "シ": "shi",
+    "ス": "su",
+    "セ": "se",
+    "ソ": "so",
+    # T-row
+    "た": "ta",
+    "ち": "chi",
+    "つ": "tsu",
+    "て": "te",
+    "と": "to",
+    "タ": "ta",
+    "チ": "chi",
+    "ツ": "tsu",
+    "テ": "te",
+    "ト": "to",
+    # N-row
+    "な": "na",
+    "に": "ni",
+    "ぬ": "nu",
+    "ね": "ne",
+    "の": "no",
+    "ナ": "na",
+    "ニ": "ni",
+    "ヌ": "nu",
+    "ネ": "ne",
+    "ノ": "no",
+    # H-row
+    "は": "ha",
+    "ひ": "hi",
+    "ふ": "fu",
+    "へ": "he",
+    "ほ": "ho",
+    "ハ": "ha",
+    "ヒ": "hi",
+    "フ": "fu",
+    "ヘ": "he",
+    "ホ": "ho",
+    # M-row
+    "ま": "ma",
+    "み": "mi",
+    "む": "mu",
+    "め": "me",
+    "も": "mo",
+    "マ": "ma",
+    "ミ": "mi",
+    "ム": "mu",
+    "メ": "me",
+    "モ": "mo",
+    # Y-row
+    "や": "ya",
+    "ゆ": "yu",
+    "よ": "yo",
+    "ヤ": "ya",
+    "ユ": "yu",
+    "ヨ": "yo",
+    # R-row
+    "ら": "ra",
+    "り": "ri",
+    "る": "ru",
+    "れ": "re",
+    "ろ": "ro",
+    "ラ": "ra",
+    "リ": "ri",
+    "ル": "ru",
+    "レ": "re",
+    "ロ": "ro",
+    # W-row
+    "わ": "wa",
+    "ゐ": "wi",
+    "ゑ": "we",
+    "を": "wo",
+    "ワ": "wa",
+    "ヰ": "wi",
+    "ヱ": "we",
+    "ヲ": "wo",
+    # N character
+    "ん": "n",
+    "ン": "n",
+    # Dakuten (voiced consonants)
+    "が": "ga",
+    "ぎ": "gi",
+    "ぐ": "gu",
+    "げ": "ge",
+    "ご": "go",
+    "ガ": "ga",
+    "ギ": "gi",
+    "グ": "gu",
+    "ゲ": "ge",
+    "ゴ": "go",
+    "ざ": "za",
+    "じ": "ji",
+    "ず": "zu",
+    "ぜ": "ze",
+    "ぞ": "zo",
+    "ザ": "za",
+    "ジ": "ji",
+    "ズ": "zu",
+    "ゼ": "ze",
+    "ゾ": "zo",
+    "だ": "da",
+    "ぢ": "ji",
+    "づ": "zu",
+    "で": "de",
+    "ど": "do",
+    "ダ": "da",
+    "ヂ": "ji",
+    "ヅ": "zu",
+    "デ": "de",
+    "ド": "do",
+    "ば": "ba",
+    "び": "bi",
+    "ぶ": "bu",
+    "べ": "be",
+    "ぼ": "bo",
+    "バ": "ba",
+    "ビ": "bi",
+    "ブ": "bu",
+    "ベ": "be",
+    "ボ": "bo",
+    # Handakuten (p-sound)
+    "ぱ": "pa",
+    "ぴ": "pi",
+    "ぷ": "pu",
+    "ぺ": "pe",
+    "ぽ": "po",
+    "パ": "pa",
+    "ピ": "pi",
+    "プ": "pu",
+    "ペ": "pe",
+    "ポ": "po",
+    # Small characters (used in compounds)
+    "ぁ": "a",
+    "ぃ": "i",
+    "ぅ": "u",
+    "ぇ": "e",
+    "ぉ": "o",
+    "ァ": "a",
+    "ィ": "i",
+    "ゥ": "u",
+    "ェ": "e",
+    "ォ": "o",
+    "ゃ": "ya",
+    "ゅ": "yu",
+    "ょ": "yo",
+    "ャ": "ya",
+    "ュ": "yu",
+    "ョ": "yo",
+    "っ": "tsu",
+    "ッ": "tsu",  # Small tsu (for double consonants)
+    # Extended Katakana (Loanwords)
+    "ヴ": "vu",  # Katakana "vu"
+    "ー": "-",  # Prolonged sound mark
+}
+
+
+def find_inner_spans(tag):
+    return tag.name == "span" and (
+        not tag.find("span", recursive=False) or tag.find("ruby", recursive=False)
+    )
+
+
+def process_line(div, is_original: bool) -> str:
+    orig_line = []
+    romanji_line = []
+
+    inner_spans = div.find_all(find_inner_spans)
+    inner_spans = [
+        span for span in inner_spans if span.find_parent(find_inner_spans) is None
+    ]
+    for span in inner_spans:
+        for child in span.contents:
+            if child.name == "ruby":
+                rb = child.find("rb")
+                base_text = rb.get_text() if rb else ""
+                rt = child.find("rt")
+                ruby_text = ""
+                for rt_child in rt.contents:
+                    ruby_text += (
+                        rt_child.string if rt_child.string else rt_child.get_text()
+                    )
+                orig_line.append(f"{base_text}({ruby_text})")
+                if is_original:
+                    romanji_line.append(ruby_text)
+            elif child.string:
+                orig_line.append(child.string)
+                if is_original:
+                    romanji_line.append(child.string)
+    if is_original:
+        for i in range(len(romanji_line)):
+            part = ""
+            for j in romanji_line[i]:
+                if j in HIRAGANA_KATAKANA_TO_ROMAJI:
+                    part += HIRAGANA_KATAKANA_TO_ROMAJI[j]
+                else:
+                    part += j
+            romanji_line[i] = part
+    if is_original:
+        return " ".join(orig_line) + "\n" + " ".join(romanji_line)
+    else:
+        return " ".join(orig_line)
+
+
+def main():
+    html_content = sys.stdin.read()
+    soup = BeautifulSoup(html_content, "html5lib")
+    lyrics = soup.select("div.Lyrics")
+    for lyric in lyrics:
+        for line in lyric.find_all("div", class_="Lyrics-line"):
+            original = line.find("div", class_="Lyrics-original")
+            translated = line.find("div", class_="Lyrics-translated")
+            assert original, "Original line not found"
+            print(process_line(original, is_original=True))
+            if translated:
+                print(process_line(translated, is_original=False))
+            print()
+        print("=========")
+
+if __name__ == "__main__":
+    main()
