@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 # Usage: wl-paste | lyricshtml2romanji
-# Deps on bs4, html5lib
+# Deps on bs4, html5lib; kks mode requires pykakasi
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 import sys
+import argparse
 
 # HIRAGANA + KATAKANA TO ROMAJI MAPPING
 HIRAGANA_KATAKANA_TO_ROMAJI = {
@@ -201,6 +202,7 @@ def find_inner_spans(tag):
 def process_line(div, is_original: bool) -> str:
     orig_line = []
     romanji_line = []
+    extract_romanji = is_original and not kks
 
     inner_spans = div.find_all(find_inner_spans)
     inner_spans = [
@@ -222,13 +224,13 @@ def process_line(div, is_original: bool) -> str:
                         rt_child.string if rt_child.string else rt_child.get_text()
                     )
                 orig_line.append(f"{base_text}({ruby_text})")
-                if is_original:
+                if extract_romanji:
                     romanji_line.append(ruby_text)
             elif child.string:
                 orig_line.append(child.string)
-                if is_original:
+                if extract_romanji:
                     romanji_line.append(child.string)
-    if is_original:
+    if extract_romanji:
         for i in range(len(romanji_line)):
             part = ""
             for j in romanji_line[i]:
@@ -237,6 +239,10 @@ def process_line(div, is_original: bool) -> str:
                 else:
                     part += j
             romanji_line[i] = part
+    elif is_original and kks:
+        orig = " ".join(orig_line)
+        romanji = kks.convert(orig)
+        romanji_line = [r["hepburn"] for r in romanji]
     if is_original:
         return " ".join(orig_line) + "\n" + " ".join(romanji_line)
     else:
@@ -259,4 +265,15 @@ def main():
         print("=========")
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser("Convert moegirl wiki lyrics to romanji")
+    parser.add_argument("--kks", action="store_true", help="Instead of <ruby>, use pykakasi to extract romanji")
+    args = parser.parse_args()
+    kks = None
+    if args.kks:
+        try:
+            import pykakasi
+        except ImportError:
+            print("pykakasi not found, please install 'python-pykakasi'")
+            sys.exit(1)
+        kks = pykakasi.kakasi()
     main()
