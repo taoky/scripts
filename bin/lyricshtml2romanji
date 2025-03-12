@@ -3,7 +3,7 @@
 # Deps on bs4, html5lib; kks mode requires pykakasi
 
 from bs4 import BeautifulSoup
-from bs4.element import Tag
+from bs4.element import Tag, NavigableString
 import sys
 import argparse
 
@@ -193,31 +193,36 @@ HIRAGANA_KATAKANA_TO_ROMAJI = {
 }
 
 
-def find_inner_spans(tag):
-    return tag.name == "span" and (
-        not tag.find("span", recursive=False) or tag.find("ruby", recursive=False)
-    )
-
-
 def process_line(div, is_original: bool) -> str:
     orig_line = []
     romanji_line = []
     extract_romanji = is_original and not kks
 
-    inner_spans = div.find_all(find_inner_spans)
-    inner_spans = [
-        span for span in inner_spans if span.find_parent(find_inner_spans) is None
-    ]
-    for span in inner_spans:
-        for child in span.contents:
-            if child.name == "ruby":
+    inner_spans = div.find("span", recursive=False)
+    for sup in inner_spans.find_all("sup"):
+        sup.decompose()
+    if len(inner_spans) == 0:
+        return ""
+    elif len(inner_spans) == 1:
+        inner_spans = inner_spans.contents[0]
+    if isinstance(inner_spans, NavigableString):
+        orig_line.append(inner_spans.string)
+        if extract_romanji:
+            romanji_line.append(inner_spans.string)
+    else:
+        for child in inner_spans.contents:
+            if isinstance(child, NavigableString):
+                orig_line.append(child.string)
+                if extract_romanji:
+                    romanji_line.append(child.string)
+            elif child.name == "ruby":
                 rb = child.find("rb")
                 base_text = rb.get_text() if rb else ""
                 rt = child.find("rt")
                 ruby_text = ""
                 for rt_child in rt.contents:
                     if isinstance(rt_child, Tag):
-                        class_ = rt_child.get("class")
+                        class_ = rt_child.get("class") or []
                         if "template-ruby-hidden" in class_:
                             continue
                     ruby_text += (
@@ -226,10 +231,10 @@ def process_line(div, is_original: bool) -> str:
                 orig_line.append(f"{base_text}({ruby_text})")
                 if extract_romanji:
                     romanji_line.append(ruby_text)
-            elif child.string:
-                orig_line.append(child.string)
+            else:
+                orig_line.append(child.get_text())
                 if extract_romanji:
-                    romanji_line.append(child.string)
+                    romanji_line.append(child.get_text())
     if extract_romanji:
         for i in range(len(romanji_line)):
             part = ""
