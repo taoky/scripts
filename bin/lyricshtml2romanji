@@ -3,6 +3,7 @@
 # Deps on bs4, html5lib
 
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 import sys
 
 # HIRAGANA + KATAKANA TO ROMAJI MAPPING
@@ -213,6 +214,10 @@ def process_line(div, is_original: bool) -> str:
                 rt = child.find("rt")
                 ruby_text = ""
                 for rt_child in rt.contents:
+                    if isinstance(rt_child, Tag):
+                        class_ = rt_child.get("class")
+                        if "template-ruby-hidden" in class_:
+                            continue
                     ruby_text += (
                         rt_child.string if rt_child.string else rt_child.get_text()
                     )
