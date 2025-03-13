@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # Usage: wl-paste | lyricshtml2romanji
-# Deps on bs4, html5lib; kks mode requires pykakasi
+# Deps on bs4, html5lib; kks mode requires pykakasi; cutlet mode requires cutlet
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag, NavigableString
@@ -196,7 +196,6 @@ HIRAGANA_KATAKANA_TO_ROMAJI = {
 def process_line(div, is_original: bool) -> str:
     orig_line = []
     romanji_line = []
-    extract_romanji = is_original and not kks
 
     inner_spans = div.find("span", recursive=False)
     for sup in inner_spans.find_all("sup"):
@@ -207,14 +206,12 @@ def process_line(div, is_original: bool) -> str:
         inner_spans = inner_spans.contents[0]
     if isinstance(inner_spans, NavigableString):
         orig_line.append(inner_spans.string)
-        if extract_romanji:
-            romanji_line.append(inner_spans.string)
+        romanji_line.append(inner_spans.string)
     else:
         for child in inner_spans.contents:
             if isinstance(child, NavigableString):
                 orig_line.append(child.string)
-                if extract_romanji:
-                    romanji_line.append(child.string)
+                romanji_line.append(child.string)
             elif child.name == "ruby":
                 rb = child.find("rb")
                 base_text = rb.get_text() if rb else ""
@@ -229,25 +226,28 @@ def process_line(div, is_original: bool) -> str:
                         rt_child.string if rt_child.string else rt_child.get_text()
                     )
                 orig_line.append(f"{base_text}({ruby_text})")
-                if extract_romanji:
-                    romanji_line.append(ruby_text)
+                romanji_line.append(ruby_text)
             else:
                 orig_line.append(child.get_text())
-                if extract_romanji:
-                    romanji_line.append(child.get_text())
-    if extract_romanji:
-        for i in range(len(romanji_line)):
-            part = ""
-            for j in romanji_line[i]:
-                if j in HIRAGANA_KATAKANA_TO_ROMAJI:
-                    part += HIRAGANA_KATAKANA_TO_ROMAJI[j]
-                else:
-                    part += j
-            romanji_line[i] = part
-    elif is_original and kks:
-        orig = " ".join(orig_line)
-        romanji = kks.convert(orig)
-        romanji_line = [r["hepburn"] for r in romanji]
+                romanji_line.append(child.get_text())
+    if is_original:
+        if not kks and not katsu:
+            for i in range(len(romanji_line)):
+                part = ""
+                for j in romanji_line[i]:
+                    if j in HIRAGANA_KATAKANA_TO_ROMAJI:
+                        part += HIRAGANA_KATAKANA_TO_ROMAJI[j]
+                    else:
+                        part += j
+                romanji_line[i] = part
+        else:
+            orig = "".join(romanji_line)
+            if kks:
+                romanji = kks.convert(orig)
+                romanji_line = [r["hepburn"] for r in romanji]
+            else:
+                romanji = katsu.romaji(orig)
+                romanji_line = romanji.split()
     if is_original:
         return " ".join(orig_line) + "\n" + " ".join(romanji_line)
     else:
@@ -269,11 +269,23 @@ def main():
             print()
         print("=========")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Convert moegirl wiki lyrics to romanji")
-    parser.add_argument("--kks", action="store_true", help="Instead of <ruby>, use pykakasi to extract romanji")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "--kks",
+        action="store_true",
+        help="Use pykakasi to extract romanji",
+    )
+    group.add_argument(
+        "--cutlet",
+        action="store_true",
+        help="Use cutlet to extract romanji",
+    )
     args = parser.parse_args()
     kks = None
+    katsu = None
     if args.kks:
         try:
             import pykakasi
@@ -281,4 +293,13 @@ if __name__ == "__main__":
             print("pykakasi not found, please install 'python-pykakasi'")
             sys.exit(1)
         kks = pykakasi.kakasi()
+    elif args.cutlet:
+        try:
+            import cutlet
+        except ImportError:
+            print(
+                "cutlet not found, please install python-cutlet, python-fugashi and python-mojimoji from AUR"
+            )
+            sys.exit(1)
+        katsu = cutlet.Cutlet()
     main()
