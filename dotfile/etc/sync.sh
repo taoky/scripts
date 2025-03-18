@@ -1,4 +1,11 @@
-#!/bin/sh -x
+#!/bin/bash
+
+if [ "$(id -u)" -ne 0 ]; then
+    echo "This script must be run as root." >&2
+    exit 1
+fi
+
+set -x
 
 rsync -a /etc/pacman.conf pacman.conf
 rsync -a /etc/pacman.d/mirrorlist pacman.d/mirrorlist
@@ -18,5 +25,6 @@ rsync -a --delete /etc/snapper/ snapper
 rsync -a /etc/subgid subgid
 rsync -a /etc/subuid subuid
 rsync -a /etc/NetworkManager/conf.d/dns.conf NetworkManager/conf.d/
-sudo rsync -a --delete /etc/sudoers.d .
-sudo chown taoky:taoky -R ./sudoers.d ./snapper ./mkinitcpio.d ./modules-load.d ./pacman.d
+rsync -a /etc/nix/nix.conf nix/nix.conf
+rsync -a --delete /etc/sudoers.d .
+chown taoky:taoky -R ./sudoers.d ./snapper ./mkinitcpio.d ./modules-load.d ./pacman.d
