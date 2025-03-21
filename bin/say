@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+PIPER_BIN="$HOME/.var/app/com.mikeasoft.pied/data/pied/piper/piper"
+MODEL_PATH="$HOME/.var/app/com.mikeasoft.pied/data/pied/models/en_US-ryan-high.onnx"
+
+# gather everything from argv
+if [ "$#" -eq 0 ]; then
+    echo "Usage: $0 <text>"
+    exit 1
+fi
+
+WORDS="$@"
+echo "$WORDS" | $PIPER_BIN --model $MODEL_PATH --output_raw > /tmp/piper_output.raw
+echo "Raw audio outputted to /tmp/piper_output.raw"
+paplay --raw --channels 1 --rate 22050 /tmp/piper_output.raw
