@@ -4,7 +4,7 @@
 
 _pkgname=gnome-settings-daemon
 pkgname="${_pkgname}-git"
-pkgver=47.100
+pkgver=48.100
 pkgrel=1
 pkgdesc="GNOME Settings Daemon"
 _gnome_git="https://gitlab.gnome.org/GNOME"
@@ -81,7 +81,7 @@ pkgver() {
   #cd "${_pkgname}"
   #git describe --tags | \
   #  sed 's/^GNOME_SETTINGS_DAEMON_//;s/_/./g;s/-/+/g'
-  echo "47.100"
+  echo "48.100"
 }
 
 prepare() {
