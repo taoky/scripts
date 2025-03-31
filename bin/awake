@@ -2,6 +2,10 @@
 from subprocess import Popen
 import argparse
 import ctypes
+import os
+
+
+os.environ["GDK_DEBUG"] = "no-portals"
 
 
 parser = argparse.ArgumentParser()
