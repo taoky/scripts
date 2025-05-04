@@ -7,3 +7,5 @@ user_pref("middlemouse.paste", false);
 
 user_pref("media.ffmpeg.vaapi.enabled", true);
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
+
+user_pref("dom.text_fragments.create_text_fragment.enabled", true);
