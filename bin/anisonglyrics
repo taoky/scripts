@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+# pipeline after lyricshtml2romanji
+
+from pathlib import Path
+from llmkey import get_ai
+import argparse
+
+PROMPT = """我会提供一段日文歌词，请你为每一句生成三行格式：
+第1行是日文原句，
+第2行是恰当分词的罗马字（文件中提供的可能有误，请看情况修正），
+第3行是贴近日语语序的逐字中文翻译（不要通顺意译，要直译）。
+
+请保留原歌词的段落分行结构不要打乱，只在每一句后添加对应的罗马字和直译中文。
+
+示例格式如下：
+
+日文原句  
+romanized（按助词/文法正确分词）  
+逐字直译的中文（尊重日语语序）
+
+我之后发送给你的就是歌词内容。请不要添加其他解释等内容，并且重复部分不要省略。"""
+
+def main(args):
+    ai = get_ai()
+    input_text = args.path.read_text(encoding="utf-8")
+    resp = ai.chat.completions.create(
+        model="Pro/deepseek-ai/DeepSeek-V3",
+        messages=[
+            {
+                "role": "user",
+                "content": PROMPT + "\n\n" + input_text,
+            }
+        ],
+    )
+    print(resp.choices[0].message.content.strip())
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Anisong lyrics romanji and translation, with LLM")
+    parser.add_argument("path", type=Path, help="Path to the lyrics file")
+    args = parser.parse_args()
+    main(args)
