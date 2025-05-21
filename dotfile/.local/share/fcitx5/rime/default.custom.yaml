@@ -1,0 +1,5 @@
+patch:
+  __include: rime_ice_suggestion:/
+  __patch:
+    ascii_composer/switch_key:
+      Caps_Lock: commit_code
