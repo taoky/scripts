@@ -4,6 +4,10 @@ set -x SYSTEMD_EDITOR nvim
 set -x TLDR_CACHE_MAX_AGE 1680
 set -x JQ_COLORS "1;30:0;39:0;39:0;39:0;32:1;39:1;39"
 
+# dogfood
+set -x RUSTUP_DIST_SERVER https://mirrors.ustc.edu.cn/rust-static
+set -x RUSTUP_UPDATE_ROOT https://mirrors.ustc.edu.cn/rust-static/rustup
+
 # User appended path
 fish_add_path ~/.cargo/bin
 fish_add_path ~/.local/bin
