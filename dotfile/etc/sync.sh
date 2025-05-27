@@ -12,9 +12,11 @@ rsync -a /etc/pacman.d/mirrorlist pacman.d/mirrorlist
 rsync -a --delete /etc/pacman.d/hooks/ pacman.d/hooks
 rsync -a --delete /etc/system76-scheduler/ system76-scheduler
 rsync -a /etc/systemd/system/*.service.d systemd/system/
+rsync -a /etc/systemd/system/*.slice.d systemd/system/
 rsync -a /etc/systemd/system/bluetooth-disable-before-sleep.service systemd/system/
 rsync -a /etc/systemd/system/intel-gpu-frequency.service systemd/system/
 rsync -a /etc/systemd/system/kdump*.service systemd/system/
+rsync -a /etc/systemd/user/slice.d systemd/user/
 rsync -a --delete /etc/mkinitcpio* .
 rsync -a /etc/environment .
 rsync -a /etc/default/grub default/
