@@ -3,3 +3,5 @@ patch:
   __patch:
     ascii_composer/switch_key:
       Caps_Lock: commit_code
+    menu:
+      page_size: 9
