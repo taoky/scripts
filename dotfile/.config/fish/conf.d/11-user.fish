@@ -5,6 +5,7 @@ end
 alias kubectl="minikube kubectl --"
 alias tmpctr="podman run -it --rm --log-driver none"
 alias vim="nvim"
+alias ccplay="flatpak run --file-forwarding moe.taoky.clicking-circles-player @@ ~/Projects/clicking-circles-player/song.json @@ ~/.var/app/sh.ppy.osu/data/osu/files/"
 
 function klogg
     if test -z "$argv"
