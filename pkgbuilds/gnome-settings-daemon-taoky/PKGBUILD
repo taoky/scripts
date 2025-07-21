@@ -3,7 +3,7 @@
 # Maintainer: Pellegrino Prevete (tallero) <pellegrinoprevete@gmail.com>
 
 _pkgname=gnome-settings-daemon
-pkgname="${_pkgname}-git"
+pkgname="${_pkgname}-taoky"
 pkgver=48.100
 pkgrel=1
 pkgdesc="GNOME Settings Daemon"

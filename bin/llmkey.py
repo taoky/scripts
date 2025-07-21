@@ -14,6 +14,10 @@ async def _get_ai(client_cls: Type[T], provider: str) -> openai.OpenAI:
     key = keyring.get_password("llmkey", provider)
     if provider == "siliconflow":
         ai = client_cls(base_url="https://api.siliconflow.cn/v1", api_key="placeholder")
+    elif provider == "groq":
+        ai = client_cls(
+            base_url="https://api.groq.com/openai/v1", api_key="placeholder"
+        )
     else:
         raise ValueError(f"Unknown provider: {provider}")
     if key is None:
