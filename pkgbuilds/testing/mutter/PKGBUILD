@@ -90,15 +90,18 @@ source=(
   # Mutter tags use SSH signatures which makepkg doesn't understand
   "git+$url.git#tag=${pkgver/[a-z]/.&}"
   "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=466fc22016cf0981424e7121557611942191992f"
-  "https://gitlab.gnome.org/taoky/mutter/-/commit/26253e691aa6dba3ca5eb003176a364c630b76c5.patch"
+  "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4618.patch"
+  "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4619.patch"
 )
 b2sums=('71d2b818f5ac016a708c59c06ca3d4bd1bd87645455c56461140aa4474ba895fec19da1af19f2c3e7f718cfe9357e4df505908141c776cffc8063d89c45fdde4'
         'c25796ff54fee353c5fc7a0815c25255b399490148d2bad1f37932d2da66d80561d6e262a5f256c89d142419a504c23eff69f7ef4e65e349f2dea3e0ac0bac1a'
+        'SKIP'
         'SKIP')
 
 prepare() {
   cd mutter
-  patch -p1 < "$srcdir/26253e691aa6dba3ca5eb003176a364c630b76c5.patch"
+  patch -p1 < "$srcdir/4618.patch"
+  patch -p1 < "$srcdir/4619.patch"
 }
 
 build() {
