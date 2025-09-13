@@ -76,8 +76,26 @@
     "github.copilot.editor.enableAutoCompletions": true,
     "workbench.editor.empty.hint": "hidden",
     "lldb.suppressUpdateNotifications": true,
-    "diffEditor.ignoreTrimWhitespace": false,
+    "diffEditor.ignoreTrimWhitespace": true,
     "window.autoDetectColorScheme": true,
     "workbench.preferredDarkColorTheme": "Solarized Dark",
     "workbench.preferredLightColorTheme": "Solarized Light",
+    "window.customTitleBarVisibility": "auto",
+    "workbench.activityBar.location": "top",
+    "diffEditor.maxComputationTime": 0,
+    "inlineChat.lineNaturalLanguageHint": false,
+    "extensions.ignoreRecommendations": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "[scss]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "rust-analyzer.files.exclude": [
+        ".flatpak-builder",
+        "repo/files"
+    ],
+    "dev.containers.dockerPath": "podman",
+    "remote.SSH.useLocalServer": false,
+    "remote.SSH.remotePlatform": {
+        "mana.zerotier": "linux"
+    },
 }
