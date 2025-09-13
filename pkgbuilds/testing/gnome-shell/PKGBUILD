@@ -79,10 +79,14 @@ source=(
   "git+https://gitlab.gnome.org/GNOME/libgnome-volume-control.git#commit=5f9768a2eac29c1ed56f1fbb449a77a3523683b6"
   "git+https://github.com/ptomato/jasmine-gjs.git#commit=856465dddbd92e82e574891e1ebc79e17d7b708a"
   "https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3859.patch"
+  "https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3878.patch"
+  "https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3861.patch"
 )
 b2sums=('8e56af83920bc1eb5b530fc477daf7f940c38814b69e439972d33fbbc9d2b5ca5733ffa062be0c50103cbd134b364eb4c06df6d3a67bf33eed4d97476874e6ab'
         'e31ae379039dfc345e8032f7b9803a59ded075fc52457ba1553276d3031e7025d9304a7f2167a01be2d54c5e121bae00a2824a9c5ccbf926865d0b24520bb053'
         'ecbbb9ce5895cc1caed2ddef39c70b4768d78ea0a929ea932d4149f923f92650973cdaefc2aacc9063f2ccf4ec965b57a9698a286f9a6561e39ce2e579ae4522'
+        'SKIP'
+        'SKIP'
         'SKIP')
 
 prepare() {
@@ -91,6 +95,8 @@ prepare() {
 
   cd $pkgbase
   patch -p1 < "$srcdir/3859.patch"
+  patch -p1 < "$srcdir/3878.patch"
+  patch -p1 < "$srcdir/3861.patch"
 }
 
 build() {
