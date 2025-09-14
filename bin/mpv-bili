@@ -16,6 +16,23 @@ POSTSCRIPT = Path.home() / "scripts" / "bin" / "bilibili_danmuku_process.py"
 
 
 def main(args):
+    if "space.bilibili.com" in args.url:
+        entries = subprocess.run(
+            YT_DLP + ["--flat-playlist", "-J", args.url],
+            stdout=subprocess.PIPE,
+            check=True,
+            text=True,
+        ).stdout
+        entries = json.loads(entries)["entries"]
+        print("Found a playlist with", len(entries), "entries")
+        for entry in entries:
+            url = entry["url"]
+            assert "space.bilibili.com" not in url, "prevent infinite loop"
+            print("Playing", url)
+            subprocess.run(
+                ["mpv-bili", url]
+            )
+        exit(0)
     print("Getting video info...")
     formats = subprocess.run(
         YT_DLP + ["-J", args.url],
@@ -80,4 +97,7 @@ if __name__ == "__main__":
     url_lower = args.url.lower()
     if url_lower.startswith("av") or url_lower.startswith("bv"):
         args.url = "https://www.bilibili.com/video/" + args.url
+    if "space.bilibili.com" in args.url:
+        # Convert lists?sid=xxx -> lists/xxx
+        args.url = args.url.replace("?sid=", "/")
     main(args)
