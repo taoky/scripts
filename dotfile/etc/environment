@@ -3,8 +3,9 @@
 #
 # Syntax: simple "KEY=VAL" pairs on separate lines
 #
-GTK_IM_MODULE=fcitx
+# GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx
+QT_IM_MODULES=wayland;fcitx;ibus
 XMODIFIERS=@im=fcitx
 SDL_IM_MODULE=fcitx
 GLFW_IM_MODULE=ibus
@@ -15,4 +16,3 @@ MOZ_ENABLE_WAYLAND=1
 
 # Qt decoration
 QT_WAYLAND_DECORATION=adwaita
-
