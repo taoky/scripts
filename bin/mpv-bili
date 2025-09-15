@@ -16,7 +16,7 @@ POSTSCRIPT = Path.home() / "scripts" / "bin" / "bilibili_danmuku_process.py"
 
 
 def main(args):
-    if "space.bilibili.com" in args.url:
+    if "space.bilibili.com" in args.url or args.p:
         entries = subprocess.run(
             YT_DLP + ["--flat-playlist", "-J", args.url],
             stdout=subprocess.PIPE,
@@ -92,6 +92,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("mpv-bili")
     parser.add_argument("url", type=str)
+    parser.add_argument("-p", action='store_true')  # 分 P 视频
     args = parser.parse_args()
     # Check if starts with "av" or "bv"
     url_lower = args.url.lower()
