@@ -1,10 +1,8 @@
-# A modified version of gnome-settings-daemon-git on AUR, with upstream changed to my own version.
-
 # Maintainer: Pellegrino Prevete (tallero) <pellegrinoprevete@gmail.com>
 
 _pkgname=gnome-settings-daemon
 pkgname="${_pkgname}-taoky"
-pkgver=48.100
+pkgver=49.0
 pkgrel=1
 pkgdesc="GNOME Settings Daemon"
 _gnome_git="https://gitlab.gnome.org/GNOME"
@@ -17,7 +15,6 @@ license=(
 depends=(
   alsa-lib
   bash
-  cairo
   dconf
   fontconfig
   gcc-libs
@@ -26,9 +23,9 @@ depends=(
   geocode-glib-2
   glib2
   glibc
-  gnome-desktop
+  gnome-desktop-4
   gsettings-desktop-schemas
-  gtk3
+  gtk4
   libcanberra-pulse
   libcolord
   libcups
@@ -39,21 +36,12 @@ depends=(
   libnotify
   libp11-kit
   libpulse
-  librsvg
-  libwacom
   libx11
-  libxext
   libxfixes
-  libxi
-  nss
-  pango
   polkit
   pulse-native-provider
-  systemd
   systemd-libs
   upower
-  wayland
-  xorg-xrdb
 )
 makedepends=(
   docbook-xsl
@@ -62,26 +50,29 @@ makedepends=(
   libxslt
   meson
   python
-  usbguard)
+  usbguard
+)
 checkdepends=(
   python-dbusmock
   python-gobject
 )
 optdepends=('usbguard: USB protection support')
-groups=(gnome gnome-git)
+groups=(gnome)
 backup=(etc/xdg/Xwayland-session.d/00-xrdb)
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("git+${url}#branch=remove-lid-switch-inhibit-local"
-        "git+${_gnome_git}/libgnome-volume-control.git")
-sha256sums=('SKIP'
+source=("git+https://gitlab.gnome.org/GNOME/gnome-settings-daemon.git#tag=${pkgver/[a-z]/.&}"
+        "git+${_gnome_git}/libgnome-volume-control.git"
+        "https://gitlab.gnome.org/taoky/gnome-settings-daemon/-/commit/6e0d15d1827dabbc56a69c4468138fc330a25696.diff")
+b2sums=('87acacd2b77f527811384665a2a29d3ab67656dd9e800c37168dab4db478825afe967442ebbbe146f4f9c54f9c256d1c9e2f8010a49b8bc0ec1b5f655a96d41d'
+            'SKIP'
             'SKIP')
 
 pkgver() {
-  #cd "${_pkgname}"
-  #git describe --tags | \
-  #  sed 's/^GNOME_SETTINGS_DAEMON_//;s/_/./g;s/-/+/g'
-  echo "48.100"
+  cd "${_pkgname}"
+  git describe --tags | \
+   sed 's/^GNOME_SETTINGS_DAEMON_//;s/_/./g;s/-/+/g'
+  git apply ../6e0d15d1827dabbc56a69c4468138fc330a25696.diff
 }
 
 prepare() {
