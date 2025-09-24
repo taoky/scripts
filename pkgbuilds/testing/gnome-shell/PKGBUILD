@@ -9,7 +9,7 @@ pkgname=(
   gnome-shell-docs
 )
 pkgver=49.0
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Next generation desktop shell"
 url="https://gitlab.gnome.org/GNOME/gnome-shell"
@@ -102,6 +102,8 @@ prepare() {
   patch -p1 < "$srcdir/3878.patch"
   patch -p1 < "$srcdir/3a9a0e1e13215ef1e4f157daa89d39b883a6ce33.diff"
   patch -p1 < "$srcdir/3250.patch"
+
+  git cherry-pick -n e54aa588c1604b63e2f051e20c1ecb3e601beb5c
 }
 
 build() {
