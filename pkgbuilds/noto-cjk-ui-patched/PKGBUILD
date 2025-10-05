@@ -1,0 +1,33 @@
+pkgname=noto-cjk-ui-patched
+pkgver=20250920.093500
+pkgrel=1
+pkgdesc=' A personal flavored version of Noto Sans CJK, to align ascent/descent with GNOME UI font (Adwaita Sans) '
+arch=('any')
+url='https://github.com/taoky/noto-cjk-ui-patched'
+license=('OFL-1.1')
+depends=()
+makedepends=()
+provides=('noto-fonts-cjk')
+conflicts=('noto-fonts-cjk')
+source=(
+  "$url/releases/download/release-${pkgver//./-}/NotoSansCJK-Black.ttc"
+  "$url/releases/download/release-${pkgver//./-}/NotoSansCJK-Bold.ttc"
+  "$url/releases/download/release-${pkgver//./-}/NotoSansCJK-DemiLight.ttc"
+  "$url/releases/download/release-${pkgver//./-}/NotoSansCJK-Light.ttc"
+  "$url/releases/download/release-${pkgver//./-}/NotoSansCJK-Medium.ttc"
+  "$url/releases/download/release-${pkgver//./-}/NotoSansCJK-Regular.ttc"
+  "$url/releases/download/release-${pkgver//./-}/NotoSansCJK-Thin.ttc"
+)
+sha256sums=('7b4501f57a25cd025c6bdedac1e6a7e7b70efef94a1135aeddc4a56009a5e56d'
+            'de51390e9abe39e637e6c54841c1637c709bfb9d34c6e36a009bd8d44d3ccbde'
+            'd46d4a4b42a0f04cfafe3d851c40570d18f59ff4833c0a1487179ebf8532c6af'
+            '709b61fadfa121a972bbf6a99d9856f8e1932e292146f762ebe29bfb66e69c84'
+            'c77611a2634ce4c55e703ae678cd559b6ca006430d5c6114b7ce1be6d389a498'
+            '3b242a6682ba49efa2f804c6d0b7bd8f56991511c39c5277bf1cddd9aa22d03d'
+            '4a0576d9cc4d2998b69373e2a41fd57d27e5f786edd355a863f247b6fce6137d')
+
+package() {
+  for var in Black Bold DemiLight Light Medium Regular Thin; do
+    install -Dm644 "NotoSansCJK-$var.ttc" "$pkgdir"/usr/share/fonts/noto-cjk/NotoSansCJK-$var.ttc
+  done
+}
