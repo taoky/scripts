@@ -1,0 +1,53 @@
+# Maintainer: Fabian Bornschein <fabiscafe@archlinux.org>
+
+pkgname=ptyxis-taoky
+_pkgname=ptyxis
+pkgver=49.1
+pkgrel=1
+pkgdesc="A container oriented terminal"
+url="https://gitlab.gnome.org/chergert/ptyxis"
+arch=(x86_64)
+license=(GPL-3.0-only)
+conflicts=(ptyxis)
+provides=(ptyxis)
+depends=(
+  cairo
+  dconf
+  gcc-libs
+  glib2
+  glibc
+  gtk4
+  hicolor-icon-theme
+  json-glib
+  libadwaita
+  libportal
+  libportal-gtk4
+  pango
+  vte4
+)
+makedepends=(
+  appstream
+  git
+  glib2-devel
+  meson
+)
+source=("git+https://github.com/taoky/ptyxis.git?branch=tky-flavored")
+b2sums=('SKIP')
+
+prepare() {
+  cd $_pkgname
+}
+
+build() {
+  arch-meson $_pkgname build
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs --no-rebuild
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir" --no-rebuild
+}
+
