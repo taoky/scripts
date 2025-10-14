@@ -1,11 +1,14 @@
 # Ref: https://github.com/zzh1996/mydocker/blob/master/Dockerfile
 FROM ustclug/debian:13
 
-# Note that in rootless container, root in container = (usually normal) user in host
-# So we don't create new user here.
-
 # base system
-RUN apt update && apt install -y fish build-essential python3 python-is-python3 curl vim
+RUN apt update && apt install -y fish build-essential python3 python-is-python3 curl vim sudo
+RUN useradd -ms /usr/bin/fish user && \
+    usermod -aG sudo user && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# Note that in rootless container, root in container = (usually normal) user in host
+# So we only create new user for envs that don't like root.
 
 # Python: ruff & uv
 RUN curl -LsSf https://astral.sh/ruff/install.sh | sh && \
