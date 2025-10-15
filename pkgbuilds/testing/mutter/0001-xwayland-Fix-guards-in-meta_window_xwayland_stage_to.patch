@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Wed, 15 Oct 2025 10:13:57 +0200
+Subject: [PATCH] xwayland: Fix guards in
+ meta_window_xwayland_stage_to_protocol
+
+Fixes a mostly-harmless copy'n'paste accident in the referenced commit.
+
+Fixes: 279169783cf1 ("window/xwayland: Use viewport scale for protocol / stage conversion")
+---
+ src/wayland/meta-window-xwayland.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/wayland/meta-window-xwayland.c b/src/wayland/meta-window-xwayland.c
+index bf1071f3293b..2797cf916c17 100644
+--- a/src/wayland/meta-window-xwayland.c
++++ b/src/wayland/meta-window-xwayland.c
+@@ -399,10 +399,10 @@ meta_window_xwayland_stage_to_protocol (MetaWindow          *window,
+   surface = meta_window_get_wayland_surface (window);
+   if (surface && surface->viewport.has_dst_size)
+     {
+-      if (stage_x)
++      if (protocol_x)
+         scale_x /= get_viewport_scale_x (surface);
+ 
+-      if (stage_y)
++      if (protocol_y)
+         scale_y /= get_viewport_scale_y (surface);
+     }
+ 

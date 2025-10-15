@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Wed, 15 Oct 2025 15:40:59 +0200
+Subject: [PATCH] xwayland/dnd: Pass dest to meta_x11_display_lookup_x_window
+
+That shouldn't return NULL, and might result in better protocol_x/y for
+a destination window using viewport scaling.
+
+If meta_x11_display_lookup_x_window unexpectedly returns NULL, bail and
+log a warning instead of crashing.
+
+Suggested by
+
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/4400
+Fixes: aa5b7e61f353 ("xwayland/dnd: Use meta_window_stage_to_protocol_point/rect")
+
+v2:
+* Use g_return_if_fail instead of falling back to
+  meta_xwayland_stage_to_protocol_point.
+---
+ src/wayland/meta-xwayland-dnd.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/wayland/meta-xwayland-dnd.c b/src/wayland/meta-xwayland-dnd.c
+index d293e3fb9570..c8d75c32a8af 100644
+--- a/src/wayland/meta-xwayland-dnd.c
++++ b/src/wayland/meta-xwayland-dnd.c
+@@ -348,21 +348,22 @@ xdnd_send_position (MetaXWaylandDnd *dnd,
+   XEvent xev = { 0 };
+   MetaWindow *window;
+ 
++  window = meta_x11_display_lookup_x_window (x11_display, dest);
++  g_return_if_fail (window);
++
+   user_action = meta_wayland_data_source_get_user_action (source);
+   meta_wayland_data_source_get_actions (source, &actions);
+ 
+   if (user_action & actions)
+     action = user_action;
+   if (!action)
+     action = actions;
+ 
+   xev.xclient.type = ClientMessage;
+   xev.xclient.message_type = xdnd_atoms[ATOM_DND_POSITION];
+   xev.xclient.format = 32;
+   xev.xclient.window = dest;
+ 
+-  window = meta_x11_display_lookup_x_window (x11_display,
+-                                             x11_display->selection.xwindow);
+   meta_window_stage_to_protocol_point (window,
+                                        x, y,
+                                        &protocol_x, &protocol_y);

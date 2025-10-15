@@ -9,8 +9,8 @@ pkgname=(
   mutter-devkit
   mutter-docs
 )
-pkgver=49.0
-pkgrel=6
+pkgver=49.1
+pkgrel=3
 pkgdesc="Window manager and compositor for GNOME"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64)
@@ -95,21 +95,27 @@ source=(
   "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
   "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4618.patch"
   "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4619.patch"
+  0001-xwayland-Fix-guards-in-meta_window_xwayland_stage_to.patch
+  0002-xwayland-dnd-Pass-dest-to-meta_x11_display_lookup_x_.patch
 )
-b2sums=('99defeefd72cc366cfa5c433a22d855400cc14c1f41d7cfe08008fd98a0b7a36295e3591dead6e7ebec489a526f8cd9af5471031d36becb4de6b441391bd9e07'
+b2sums=('6fbecaaaf6de11fef0e1fc1160d541f686aa7dd51b65b3a74384e9f20c11dda575330a29772dad5e5d12439444c9610e2886620dbd491b58c6fc57518c7753a0'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
         'SKIP'
-        'SKIP')
+        'SKIP'
+        '6bb2ca71b8156162ebe8b557d359abf92779ac0684957900ecc4de5b813e64ed3bafb426acb23df2003c73aa1969786eb49dc6a00b80163db14b318da98203ba'
+        '9a75295f399516426aa279db5dca3b3d72b971e6f34af72c1f1200f6feac182fc528410610da81baa1fc3bdb9180a4e88b836aa947d3a479d1fd00354c698db3'
+)
 
 prepare() {
   cd mutter
   patch -p1 < "$srcdir/4618.patch"
   patch -p1 < "$srcdir/4619.patch"
-  git cherry-pick -n 353b03b689216d7e1c5ebd0acaf2c433d712294c
-  git cherry-pick -n d9410c0ec6923016d0fc5c4abb9ea41061a93ae4
-  git cherry-pick -n 85216f2db006a5f51703c0bcd519e9d630e9b7eb
-  git cherry-pick -n c0fd2d95568e36a9c96011ff98d6c5beba2c8879 \
-                     0828fd6169c17ca54633f76936f03ac496f6b01e
+
+  # Fix drag-and-drop crashes
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/mutter/-/issues/18
+  # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4720
+  git apply -3 ../0001-xwayland-Fix-guards-in-meta_window_xwayland_stage_to.patch
+  git apply -3 ../0002-xwayland-dnd-Pass-dest-to-meta_x11_display_lookup_x_.patch
 }
 
 build() {
