@@ -2,6 +2,6 @@
 
 export ANTHROPIC_BASE_URL=https://api.siliconflow.cn/
 export ANTHROPIC_API_KEY=$(keyring get llmkey siliconflow)
-export ANTHROPIC_MODEL=Qwen/Qwen3-Coder-480B-A35B-Instruct
+export ANTHROPIC_MODEL=zai-org/GLM-4.6
 
 exec claude
