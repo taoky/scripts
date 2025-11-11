@@ -902,6 +902,10 @@ def construct_xml(dms: list[DanmukuObject], header: dict[str, str]) -> str:
     return formatted_str.replace("<d p=", "\n  <d p=").replace("</i>", "\n</i>")
 
 
+def get_subtitle_size(height: int, base: int = 50, base_height: int = 1080):
+    return int(base * height / base_height)
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 4:
         print(f"Usage: {sys.argv[0]} [XMLFILE] [WIDTH] [HEIGHT]")
@@ -914,4 +918,15 @@ if __name__ == "__main__":
     clustered = combine(objects)
     final_dms = post_combine(clustered)
     result_xml = construct_xml(final_dms, header)
-    print(convert_to_ass(result_xml, width, height, font_size=50, duration_marquee=15, duration_still=10, text_opacity=0.8, reduce_comments=False))
+    print(
+        convert_to_ass(
+            result_xml,
+            width,
+            height,
+            font_size=get_subtitle_size(height),
+            duration_marquee=15,
+            duration_still=10,
+            text_opacity=0.8,
+            reduce_comments=False,
+        )
+    )
