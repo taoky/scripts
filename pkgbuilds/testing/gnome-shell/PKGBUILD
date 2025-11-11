@@ -9,7 +9,7 @@ pkgname=(
   gnome-shell-docs
 )
 pkgver=49.1
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Next generation desktop shell"
 url="https://gitlab.gnome.org/GNOME/gnome-shell"
@@ -98,6 +98,12 @@ prepare() {
   ln -s libgnome-volume-control gvc
 
   cd $pkgbase
+
+  # Fix hang on keyboard layout switch
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/gnome-shell/-/issues/13
+  # https://gitlab.gnome.org/GNOME/gnome-shell/-/merge_requests/3939
+  git cherry-pick -n d6123a003afc9665e7b0067a46dc93b19ea52c07
+
   patch -p1 < "$srcdir/3859.patch"
   patch -p1 < "$srcdir/3878.patch"
   patch -p1 < "$srcdir/3a9a0e1e13215ef1e4f157daa89d39b883a6ce33.diff"

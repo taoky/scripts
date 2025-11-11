@@ -27,10 +27,17 @@ RUN curl -LsSf https://astral.sh/ruff/install.sh | sh && \
     curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Tools
-RUN apt install -y ripgrep fd-find tmux wget
+RUN apt install -y ripgrep fd-find tmux wget less apt-file && \
+    apt-file update
 RUN curl -fLo /root/.tmux.conf https://github.com/taoky/scripts/raw/refs/heads/master/dotfile/.tmux.conf
 
 # git-keeper dev
 RUN apt install -y devscripts debhelper fakeroot lintian dh-exec go-md2man
+
+# mirrors-frontend dev
+RUN apt install -y esbuild node-typescript
+
+# yadex dev
+RUN apt install -y nginx
 
 CMD ["/usr/bin/fish"]
