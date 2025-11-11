@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+# Returns 1 if detected dark background, otherwise 0.
+import os, sys, termios, time, select, re
+
+def query(timeout=0.5):
+    try:
+        fd = os.open("/dev/tty", os.O_RDWR | os.O_NOCTTY)
+    except OSError:
+        return b""
+    old = termios.tcgetattr(fd)
+    try:
+        new = old[:]
+        new[3] &= ~(termios.ICANON | termios.ECHO)
+        termios.tcsetattr(fd, termios.TCSANOW, new)
+        os.write(fd, b"\x1b]11;?\x07")  # OSC 11 query
+        buf, end = b"", time.time() + timeout
+        while time.time() < end:
+            r, _, _ = select.select([fd], [], [], end - time.time())
+            if not r:
+                break
+            chunk = os.read(fd, 4096)
+            if not chunk:
+                break
+            buf += chunk
+            if b"\x07" in buf or b"\x1b\\" in buf:  # BEL or ST
+                break
+        return buf
+    finally:
+        termios.tcsetattr(fd, termios.TCSANOW, old)
+        os.close(fd)
+
+def parse_rgb(raw):
+    s = raw.decode("ascii", "ignore")
+    m = re.search(r"\x1b\]11;([^\x07\x1b]*)", s)
+    if not m:
+        return None
+    payload = m.group(1).strip()
+    m2 = re.search(r"(?:rgb|rgba):([0-9A-Fa-f]+)/([0-9A-Fa-f]+)/([0-9A-Fa-f]+)", payload)
+    if m2:
+        def scale(h):
+            v = int(h, 16)
+            return 255 * v / ((1 << (4*len(h))) - 1)
+        return (scale(m2.group(1)), scale(m2.group(2)), scale(m2.group(3)))
+    m2 = re.search(r"#?([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})", payload)
+    if m2:
+        return (int(m2.group(1),16), int(m2.group(2),16), int(m2.group(3),16))
+    return None
+
+def is_light(rgb):
+    r, g, b = rgb
+    luma = 0.2126*r + 0.7152*g + 0.0722*b
+    return luma >= 186
+
+rgb = parse_rgb(query())
+sys.exit(1 if not (rgb and is_light(rgb)) else 0)
