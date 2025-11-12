@@ -36,7 +36,7 @@ function auto_theme --description 'Use osc11 (0=light, 1=dark) to set fish theme
     set -l theme "Tomorrow Night"
     if command -q osc11
         if osc11
-            set theme "fish_default"
+            set theme "fish default"
         end
     end
 
