@@ -22,7 +22,6 @@ TLP = {
 
 APFS = {
     "apfs-fuse-git",
-    "apfs-fuse-debug",
 }
 
 NIRI = {
