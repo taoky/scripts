@@ -46,6 +46,10 @@ STEAM_HOST = {
     "steam",
 }
 
+LOGITECH = {
+    "piper",
+}
+
 COMMON = {
     "1password",
     "1password-cli",
@@ -63,6 +67,7 @@ COMMON = {
     "bear",
     "bind",
     "bluez-utils",
+    "bmon",
     "btrfs-progs",
     "bustle",
     "bpftrace",
@@ -146,6 +151,7 @@ COMMON = {
     "handbrake-cli",
     "htop",
     "ibus",
+    "iftop",
     "inxi",
     "iotop-c",
     "jq",
@@ -214,6 +220,7 @@ COMMON = {
     "python-keyring",
     "python-tabulate",
     "python-weasyprint",
+    "pv",
     "qbittorrent",
     "qemu-full",
     "qemu-user-static-binfmt",
@@ -256,6 +263,7 @@ COMMON = {
     "visual-studio-code-bin",
     "w3m",
     "waycheck",
+    "weston",
     "whois",
     "wireguard-tools",
     "wireless-regdb",
@@ -273,8 +281,8 @@ COMMON = {
     "zerotier-one",
 }
 
-NANOKA = AMDCPU | AMDGPU | TUNED | COMMON | NIRI | WLAN_FALLBACK | STEAM_HOST
-SHIMARIN = INTELCPU | INTELGPU | TLP | APFS | COMMON | NIRI | ICEPINYIN
+NANOKA = AMDCPU | AMDGPU | TUNED | COMMON | NIRI | WLAN_FALLBACK | STEAM_HOST | LOGITECH
+SHIMARIN = INTELCPU | INTELGPU | TLP | APFS | COMMON | NIRI | ICEPINYIN | LOGITECH
 
 packages = {
     "nanoka.taoky.moe": NANOKA,
