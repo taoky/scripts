@@ -16,9 +16,7 @@ TUNED = {
     "tuned-ppd",
 }
 
-TLP = {
-    "tlp"
-}
+TLP = {"tlp"}
 
 APFS = {
     "apfs-fuse-git",
@@ -35,6 +33,10 @@ NIRI = {
 WLAN_FALLBACK = {
     "iw",
     "iwd",
+}
+
+STEAM_HOST = {
+    "steam",
 }
 
 COMMON = {
@@ -138,6 +140,7 @@ COMMON = {
     "kate",
     "kcharselect",
     "kolourpaint",
+    "krita",
     "less",
     "libreoffice-fresh",
     "linux",
@@ -204,6 +207,7 @@ COMMON = {
     "qt6-tools",
     "qt6-wayland",
     "rapid-photo-downloader",
+    "rasdaemon",
     "ripgrep",
     "ripgrep-all",
     "rsync",
@@ -216,7 +220,6 @@ COMMON = {
     "shfmt",
     "showmethekey",
     "sqlitebrowser",
-    "steam",
     "strace",
     "sudo",
     "supertuxkart",
@@ -257,7 +260,7 @@ COMMON = {
     "zerotier-one",
 }
 
-NANOKA = AMDCPU | AMDGPU | TUNED | COMMON | NIRI | WLAN_FALLBACK
+NANOKA = AMDCPU | AMDGPU | TUNED | COMMON | NIRI | WLAN_FALLBACK | STEAM_HOST
 SHIMARIN = INTELCPU | INTELGPU | TLP | APFS | COMMON | NIRI
 
 packages = {
