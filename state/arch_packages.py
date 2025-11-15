@@ -30,6 +30,13 @@ NIRI = {
     "swaylock",
 }
 
+ICEPINYIN = {
+    "fcitx5-rime",
+    "rime-ice-pinyin-git",
+    "rime-pinyin-moegirl",
+    "rime-pinyin-zhwiki",
+}
+
 WLAN_FALLBACK = {
     "iw",
     "iwd",
@@ -94,6 +101,7 @@ COMMON = {
     "fd",
     "file-roller",
     "filezilla",
+    "fio",
     "firefox",
     "firefoxpwa",
     "fish",
@@ -127,13 +135,17 @@ COMMON = {
     "gnome-weather",
     "go",
     "golangci-lint",
+    "goreleaser",
     "gparted",
     "grub",
     "gst-plugin-pipewire",
     "gtk3-demos",
     "gtk4-demos",
+    "gvfs-nfs",
+    "gvfs-onedrive",
     "handbrake-cli",
     "htop",
+    "ibus",
     "inxi",
     "iotop-c",
     "jq",
@@ -180,6 +192,7 @@ COMMON = {
     "openbsd-netcat",
     "openssh",
     "openvpn",
+    "osv-scanner",
     "pandoc-bin",
     "pango-taoky",
     "pango-taoky-debug",
@@ -261,7 +274,7 @@ COMMON = {
 }
 
 NANOKA = AMDCPU | AMDGPU | TUNED | COMMON | NIRI | WLAN_FALLBACK | STEAM_HOST
-SHIMARIN = INTELCPU | INTELGPU | TLP | APFS | COMMON | NIRI
+SHIMARIN = INTELCPU | INTELGPU | TLP | APFS | COMMON | NIRI | ICEPINYIN
 
 packages = {
     "nanoka.taoky.moe": NANOKA,
