@@ -29,6 +29,11 @@ NIRI = {
     "swaybg",
     "swayidle",
     "swaylock",
+    "mako",
+    "fuzzel",
+    "waybar",
+    "xdg-desktop-portal-gtk",
+    "xdg-desktop-portal-gnome",
 }
 
 ICEPINYIN = {
@@ -51,10 +56,21 @@ LOGITECH = {
     "piper",
 }
 
+DOCKER = {
+    "docker",
+    "docker-compose",
+}
+
+PRINTER = {
+    "hplip",
+    "captdriver-git",
+}
+
 COMMON = {
     "1password",
     "1password-cli",
     "aegisub",
+    "android-tools",
     "anki",
     "apparmor",
     "arch-checkfw",
@@ -64,6 +80,7 @@ COMMON = {
     "base",
     "base-devel",
     "bat",
+    "bc",
     "bcc",
     "bcc-libbpf-tools",
     "bear",
@@ -73,8 +90,11 @@ COMMON = {
     "btrfs-progs",
     "bustle",
     "bpftrace",
+    "cantarell-fonts",
+    "cargo-bloat",
     "cargo-deb",
     "cargo-edit",
+    "cargo-flamegraph",
     "cargo-release",
     "chafa",
     "cheese",
@@ -83,9 +103,11 @@ COMMON = {
     "claude-code",
     "cpio",
     "dconf-editor",
+    "debootstrap",
     "devtools",
     "digikam",
     "direnv",
+    "dive",
     "dmidecode",
     "dnsmasq",
     "dotnet-sdk",
@@ -155,22 +177,30 @@ COMMON = {
     "ibus",
     "iftop",
     "inxi",
+    "inkscape",
     "iotop-c",
+    "iperf",
+    "iperf3",
     "jq",
     "kate",
     "kcharselect",
     "kolourpaint",
+    "konsole",
     "krita",
     "less",
+    "libadwaita-demos",
     "libreoffice-fresh",
     "linux",
     "localsend",
     "lollypop",
     "loupe",
+    "lrzsz",
     "luminance",
     "man-db",
     "man-pages",
+    "mangohud",
     "markdownlint-cli2",
+    "memtest86+-efi",
     "mesa-utils",
     "meson",
     "moreutils",
@@ -191,12 +221,15 @@ COMMON = {
     "ncdu",
     "net-tools",
     "netease-cloud-music-gtk4",
+    "nethack",
+    "nethogs",
     "networkmanager",
     "networkmanager-openvpn",
     "nginx",
     "noto-cjk-ui-patched",
     "noto-fonts-emoji",
     "nvtop",
+    "obs-studio",
     "openbsd-netcat",
     "openssh",
     "openvpn",
@@ -230,6 +263,8 @@ COMMON = {
     "qt6-wayland",
     "rapid-photo-downloader",
     "rasdaemon",
+    "rclone",
+    "repo",
     "ripgrep",
     "ripgrep-all",
     "rsync",
@@ -238,11 +273,15 @@ COMMON = {
     "ruff",
     "rustscan",
     "rustup",
+    "sg3_utils",
     "shellcheck-static",
     "shfmt",
     "showmethekey",
+    "siege",
+    "snapper",
     "sqlitebrowser",
     "strace",
+    "stress",
     "sudo",
     "supertuxkart",
     "sushi",
@@ -280,6 +319,7 @@ COMMON = {
     "xungu-git",
     "xwayland-run",
     "yt-dlp",
+    "zenity",
     "zerotier-one",
 }
 
@@ -316,6 +356,7 @@ SHIMARIN = (
     | ICEPINYIN
     | LOGITECH
     | SHIMARIN_FIRMWARE
+    | DOCKER
 )
 
 packages = {
