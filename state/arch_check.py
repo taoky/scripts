@@ -8,8 +8,8 @@ import subprocess
 HOSTNAME = os.uname().nodename
 
 
-def run_cmd(cmd):
-    result = subprocess.run(cmd, check=True, stdout=subprocess.PIPE)
+def run_cmd(cmd, check=True):
+    result = subprocess.run(cmd, check=check, stdout=subprocess.PIPE)
     return result
 
 
@@ -28,7 +28,10 @@ def pacman_mark_as_implicit(package):
 
 
 def pacman_get_orphans():
-    result = run_cmd(["pacman", "-Qqdt"])
+    result = run_cmd(["pacman", "-Qqdt"], check=False)
+    if result.returncode == 1:
+        # no orphans
+        return set()
     orphans = result.stdout.decode().splitlines()
     return set(orphans)
 

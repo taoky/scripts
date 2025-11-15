@@ -4,6 +4,7 @@ INTELCPU = {"intel-ucode"}
 
 AMDGPU = {
     "llama.cpp-hip",
+    "rocm-hip-sdk",
 }
 
 INTELGPU = {
