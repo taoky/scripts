@@ -57,6 +57,7 @@ COMMON = {
     "aegisub",
     "anki",
     "apparmor",
+    "arch-checkfw",
     "archlinuxcn-keyring",
     "audacity",
     "autocorrect-bin",
@@ -163,7 +164,6 @@ COMMON = {
     "less",
     "libreoffice-fresh",
     "linux",
-    "linux-firmware",
     "localsend",
     "lollypop",
     "loupe",
@@ -171,6 +171,7 @@ COMMON = {
     "man-db",
     "man-pages",
     "markdownlint-cli2",
+    "mesa-utils",
     "meson",
     "moreutils",
     "mpv",
@@ -282,8 +283,40 @@ COMMON = {
     "zerotier-one",
 }
 
-NANOKA = AMDCPU | AMDGPU | TUNED | COMMON | NIRI | WLAN_FALLBACK | STEAM_HOST | LOGITECH
-SHIMARIN = INTELCPU | INTELGPU | TLP | APFS | COMMON | NIRI | ICEPINYIN | LOGITECH
+NANOKA_FIRMWARE = {
+    "linux-firmware-amdgpu",
+    "linux-firmware-other",
+    "linux-firmware-realtek",
+    "linux-firmware-atheros",
+}
+
+SHIMARIN_FIRMWARE = {
+    "linux-firmware-intel",
+    "sof-firmware",
+}
+
+NANOKA = (
+    AMDCPU
+    | AMDGPU
+    | TUNED
+    | COMMON
+    | NIRI
+    | WLAN_FALLBACK
+    | STEAM_HOST
+    | LOGITECH
+    | NANOKA_FIRMWARE
+)
+SHIMARIN = (
+    INTELCPU
+    | INTELGPU
+    | TLP
+    | APFS
+    | COMMON
+    | NIRI
+    | ICEPINYIN
+    | LOGITECH
+    | SHIMARIN_FIRMWARE
+)
 
 packages = {
     "nanoka.taoky.moe": NANOKA,
