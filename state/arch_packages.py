@@ -34,6 +34,7 @@ NIRI = {
     "waybar",
     "xdg-desktop-portal-gtk",
     "xdg-desktop-portal-gnome",
+    "wofi",
 }
 
 ICEPINYIN = {
@@ -66,6 +67,18 @@ PRINTER = {
     "captdriver-git",
 }
 
+SIMPLEX = {
+    "openbox",
+    "picom",
+    "xcompmgr",
+    "feh",
+}
+
+TILIX = {
+    "tilix-git",
+    "tilix-git-debug",
+}
+
 COMMON = {
     "1password",
     "1password-cli",
@@ -88,6 +101,7 @@ COMMON = {
     "bluez-utils",
     "bmon",
     "btrfs-progs",
+    "btrfs-heatmap",
     "bustle",
     "bpftrace",
     "cantarell-fonts",
@@ -95,12 +109,14 @@ COMMON = {
     "cargo-deb",
     "cargo-edit",
     "cargo-flamegraph",
+    "cargo-fuzz",
     "cargo-release",
     "chafa",
     "cheese",
     "chromium",
     "clang",
     "claude-code",
+    "compsize",
     "cpio",
     "dconf-editor",
     "debootstrap",
@@ -136,6 +152,7 @@ COMMON = {
     "fish",
     "flatpak",
     "flatpak-builder",
+    "fsearch",
     "fwupd",
     "fx",
     "gcc",
@@ -173,6 +190,7 @@ COMMON = {
     "gvfs-nfs",
     "gvfs-onedrive",
     "handbrake-cli",
+    "heaptrack",
     "htop",
     "ibus",
     "iftop",
@@ -184,10 +202,12 @@ COMMON = {
     "jq",
     "kate",
     "kcharselect",
+    "kernel-modules-hook",
     "kolourpaint",
     "konsole",
     "krita",
     "less",
+    "lftp",
     "libadwaita-demos",
     "libreoffice-fresh",
     "linux",
@@ -234,6 +254,7 @@ COMMON = {
     "openssh",
     "openvpn",
     "osv-scanner",
+    "otf-comicshanns-nerd",
     "pandoc-bin",
     "pango-taoky",
     "pango-taoky-debug",
@@ -255,6 +276,7 @@ COMMON = {
     "python-keyring",
     "python-tabulate",
     "python-weasyprint",
+    "pypy3",
     "pv",
     "qbittorrent",
     "qemu-full",
@@ -264,6 +286,7 @@ COMMON = {
     "rapid-photo-downloader",
     "rasdaemon",
     "rclone",
+    "remmina",
     "repo",
     "ripgrep",
     "ripgrep-all",
@@ -279,6 +302,7 @@ COMMON = {
     "showmethekey",
     "siege",
     "snapper",
+    "socat",
     "sqlitebrowser",
     "strace",
     "stress",
@@ -286,6 +310,8 @@ COMMON = {
     "supertuxkart",
     "sushi",
     "syncthing",
+    "sysstat",
+    "sysprof",
     "tealdeer",
     "teamspeak3",
     "tigervnc",
@@ -296,6 +322,7 @@ COMMON = {
     "ttf-liberation",
     "ttf-lxgw-wenkai",
     "typescript",
+    "unarchiver",
     "uv",
     "vala",
     "vim",
@@ -318,6 +345,7 @@ COMMON = {
     "xterm",
     "xungu-git",
     "xwayland-run",
+    "yazi",
     "yt-dlp",
     "zenity",
     "zerotier-one",
@@ -345,6 +373,7 @@ NANOKA = (
     | STEAM_HOST
     | LOGITECH
     | NANOKA_FIRMWARE
+    | SIMPLEX
 )
 SHIMARIN = (
     INTELCPU
@@ -357,6 +386,9 @@ SHIMARIN = (
     | LOGITECH
     | SHIMARIN_FIRMWARE
     | DOCKER
+    | PRINTER
+    | SIMPLEX
+    | TILIX
 )
 
 packages = {

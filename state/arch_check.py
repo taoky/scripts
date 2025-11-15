@@ -40,7 +40,7 @@ def main():
     target_packages = arch_packages.packages[HOSTNAME]
     local_packages = pacman_get_installed_packages()
 
-    print("Not installed packages:", target_packages - local_packages)
+    print("Not installed packages:", sorted(target_packages - local_packages))
 
     # Mark packages
     for package in target_packages:
@@ -49,7 +49,7 @@ def main():
     for package in local_packages - target_packages:
         pacman_mark_as_implicit(package)
     
-    print("Orphaned packages:", pacman_get_orphans())
+    print("Orphaned packages:", sorted(pacman_get_orphans()))
 
 
 if __name__ == "__main__":
