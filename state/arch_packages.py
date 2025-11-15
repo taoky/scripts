@@ -6,15 +6,46 @@ AMDGPU = {
     "llama.cpp-hip",
 }
 
+INTELGPU = {
+    "intel-gpu-tools",
+    "vulkan-intel",
+}
+
 TUNED = {
     "tuned",
     "tuned-ppd",
 }
 
+TLP = {
+    "tlp"
+}
+
+APFS = {
+    "apfs-fuse-git",
+    "apfs-fuse-debug",
+}
+
+NIRI = {
+    "niri",
+    "xwayland-satellite",
+    "swaybg",
+    "swayidle",
+    "swaylock",
+}
+
+WLAN_FALLBACK = {
+    "iw",
+    "iwd",
+}
+
 COMMON = {
     "1password",
+    "1password-cli",
+    "aegisub",
     "anki",
+    "apparmor",
     "archlinuxcn-keyring",
+    "audacity",
     "autocorrect-bin",
     "base",
     "base-devel",
@@ -26,6 +57,7 @@ COMMON = {
     "bluez-utils",
     "btrfs-progs",
     "bustle",
+    "bpftrace",
     "cargo-deb",
     "cargo-edit",
     "cargo-release",
@@ -68,6 +100,7 @@ COMMON = {
     "flatpak-builder",
     "fwupd",
     "fx",
+    "gcc",
     "gdb",
     "gdm",
     "gimp",
@@ -83,6 +116,8 @@ COMMON = {
     "gnome-control-center",
     "gnome-font-viewer",
     "gnome-keyring",
+    "gnome-session",
+    "gnome-shell",
     "gnome-shell-debug",
     "gnome-shell-docs",
     "gnome-shell-extensions",
@@ -90,12 +125,17 @@ COMMON = {
     "gnome-tweaks",
     "gnome-weather",
     "go",
+    "golangci-lint",
+    "gparted",
     "grub",
     "gst-plugin-pipewire",
+    "gtk3-demos",
+    "gtk4-demos",
     "handbrake-cli",
     "htop",
-    "iw",
-    "iwd",
+    "inxi",
+    "iotop-c",
+    "jq",
     "kate",
     "kcharselect",
     "kolourpaint",
@@ -117,6 +157,7 @@ COMMON = {
     "mpv-osc-modern-git",
     "mpv-osc-thumbfast-git",
     "mtr",
+    "mutter",
     "mutter-debug",
     "mutter-devkit",
     "mutter-docs",
@@ -131,10 +172,10 @@ COMMON = {
     "networkmanager",
     "networkmanager-openvpn",
     "nginx",
-    "niri",
     "noto-cjk-ui-patched",
     "noto-fonts-emoji",
     "nvtop",
+    "openbsd-netcat",
     "openssh",
     "openvpn",
     "pandoc-bin",
@@ -143,10 +184,15 @@ COMMON = {
     "pango-taoky-docs",
     "papers",
     "paru",
+    "playerctl",
     "pnpm",
     "podman",
+    "powertop",
+    "pre-commit",
+    "prettier",
     "ptyxis-taoky",
     "ptyxis-taoky-debug",
+    "pwndbg",
     "pyright",
     "python-bcc",
     "python-biliass",
@@ -154,26 +200,22 @@ COMMON = {
     "python-tabulate",
     "python-weasyprint",
     "qbittorrent",
-    "qemu-audio-spice",
     "qemu-full",
-    "qemu-hw-display-qxl",
-    "qemu-hw-display-virtio-vga",
-    "qemu-hw-usb-redirect",
-    "qemu-img",
-    "qemu-system-x86",
-    "qemu-ui-gtk",
-    "qemu-ui-spice-app",
-    "qemu-ui-spice-core",
     "qemu-user-static-binfmt",
     "qt6-tools",
     "qt6-wayland",
+    "rapid-photo-downloader",
     "ripgrep",
+    "ripgrep-all",
+    "rsync",
     "ruby-bundler",
     "ruby-erb",
     "ruff",
+    "rustscan",
     "rustup",
     "shellcheck-static",
     "shfmt",
+    "showmethekey",
     "sqlitebrowser",
     "steam",
     "strace",
@@ -195,6 +237,7 @@ COMMON = {
     "vala",
     "vim",
     "virt-manager",
+    "virt-viewer",
     "visual-studio-code-bin",
     "w3m",
     "waycheck",
@@ -211,9 +254,14 @@ COMMON = {
     "xterm",
     "xungu-git",
     "xwayland-run",
-    "xwayland-satellite",
     "yt-dlp",
     "zerotier-one",
 }
 
-NANOKA = AMDCPU | AMDGPU | TUNED | COMMON
+NANOKA = AMDCPU | AMDGPU | TUNED | COMMON | NIRI | WLAN_FALLBACK
+SHIMARIN = INTELCPU | INTELGPU | TLP | APFS | COMMON | NIRI
+
+packages = {
+    "nanoka.taoky.moe": NANOKA,
+    "shimarin.taoky.moe": SHIMARIN,
+}
