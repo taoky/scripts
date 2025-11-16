@@ -77,6 +77,13 @@ SIMPLEX = {
 TILIX = {
     "tilix-git",
     "tilix-git-debug",
+    "ldc",
+    "po4a",
+}
+
+TEXLIVE = {
+    "texlive-basic",
+    "texlive-langchinese",
 }
 
 COMMON = {
@@ -248,6 +255,7 @@ COMMON = {
     "nginx",
     "noto-cjk-ui-patched",
     "noto-fonts-emoji",
+    "nvme-cli",
     "nvtop",
     "obs-studio",
     "openbsd-netcat",
@@ -259,7 +267,6 @@ COMMON = {
     "pango-taoky",
     "pango-taoky-debug",
     "pango-taoky-docs",
-    "papers",
     "paru",
     "playerctl",
     "pnpm",
@@ -267,6 +274,7 @@ COMMON = {
     "powertop",
     "pre-commit",
     "prettier",
+    "proxychains-ng",
     "ptyxis-taoky",
     "ptyxis-taoky-debug",
     "pwndbg",
@@ -274,6 +282,7 @@ COMMON = {
     "python-bcc",
     "python-biliass",
     "python-keyring",
+    "python-pip",
     "python-tabulate",
     "python-weasyprint",
     "pypy3",
@@ -301,8 +310,11 @@ COMMON = {
     "shfmt",
     "showmethekey",
     "siege",
+    "skopeo",
     "snapper",
     "socat",
+    "soundfont-fluid",
+    "speech-dispatcher",
     "sqlitebrowser",
     "strace",
     "stress",
@@ -312,24 +324,30 @@ COMMON = {
     "syncthing",
     "sysstat",
     "sysprof",
+    "tcpdump",
     "tealdeer",
     "teamspeak3",
     "tigervnc",
+    "timidity++",
     "tmux",
     "tokei",
+    "traceroute",
     "tree",
     "ttf-jetbrains-mono",
+    "ttf-jetbrains-mono-nerd",
     "ttf-liberation",
     "ttf-lxgw-wenkai",
     "typescript",
     "unarchiver",
     "uv",
     "vala",
+    "valgrind",
     "vim",
     "virt-manager",
     "virt-viewer",
     "visual-studio-code-bin",
     "w3m",
+    "waifu2x-ncnn-vulkan",
     "waycheck",
     "weston",
     "whois",
@@ -349,6 +367,8 @@ COMMON = {
     "yt-dlp",
     "zenity",
     "zerotier-one",
+    "zsh",
+    "zsh-completions",
 }
 
 NANOKA_FIRMWARE = {
@@ -389,6 +409,7 @@ SHIMARIN = (
     | PRINTER
     | SIMPLEX
     | TILIX
+    | TEXLIVE
 )
 
 packages = {
