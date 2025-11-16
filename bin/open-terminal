@@ -1,0 +1,9 @@
+#!/bin/sh
+
+hostname=$(hostnamectl hostname)
+
+if [ "$hostname" = "nanoka.taoky.moe" ]; then
+    ptyxis --new-window -d "$1"
+else
+    tilix -w "$1"
+fi
