@@ -376,6 +376,7 @@ COMMON = {
     "wireless-regdb",
     "wireshark-qt",
     "wl-clipboard",
+    "xdg-terminal-exec",
     "xorg-server-xephyr",
     "xorg-xdpyinfo",
     "xorg-xeyes",
