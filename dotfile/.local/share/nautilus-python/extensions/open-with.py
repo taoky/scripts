@@ -1,8 +1,23 @@
-from gi.repository import Gio, GObject, Nautilus
+from gi.repository import Gio, GObject, Nautilus, GLib
 from gettext import gettext
-from subprocess import Popen
+import shlex
 
 _ = gettext
+_running = set()  # avoid proc being gc
+
+def spawn_nonblocking(argv):
+    proc = Gio.Subprocess.new(argv, Gio.SubprocessFlags.NONE)
+    _running.add(proc)
+
+    def on_done(proc, res, data=None):
+        try:
+            ok = proc.wait_check_finish(res)
+        except GLib.Error as e:
+            pass
+        finally:
+            _running.discard(proc)
+
+    proc.wait_check_async(None, on_done)
 
 class OpenWithExtension(GObject.GObject, Nautilus.MenuProvider):
     def get_file_items(self, *args):
@@ -45,8 +60,8 @@ class OpenWithExtension(GObject.GObject, Nautilus.MenuProvider):
 
     def _code_callback(self, menu, file_):
         filename = Gio.File.new_for_uri(file_.get_uri()).get_path()
-        Popen(['code', filename])
+        spawn_nonblocking(['code', filename])
     
     def _terminal_callback(self, menu, file_):
         filename = Gio.File.new_for_uri(file_.get_uri()).get_path()
-        Popen(['xdg-terminal-exec', '--', filename])
+        spawn_nonblocking(['xdg-terminal-exec', f'--dir={shlex.quote(filename)}'])

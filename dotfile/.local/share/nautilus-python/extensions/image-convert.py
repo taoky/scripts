@@ -2,11 +2,27 @@
 # img_convert.py – super-simple image converter for Nautilus
 
 import os
-import subprocess
 
-from gi.repository import Nautilus, GObject
+from gi.repository import Nautilus, GObject, Gio, GLib
 
 ALLOWED = {"jpg", "png", "webp", "heic"}
+
+
+_running = set()  # avoid proc being gc
+
+def spawn_nonblocking(argv):
+    proc = Gio.Subprocess.new(argv, Gio.SubprocessFlags.NONE)
+    _running.add(proc)
+
+    def on_done(proc, res, data=None):
+        try:
+            ok = proc.wait_check_finish(res)
+        except GLib.Error as e:
+            pass
+        finally:
+            _running.discard(proc)
+
+    proc.wait_check_async(None, on_done)
 
 
 class ImgConvertExtension(GObject.GObject, Nautilus.MenuProvider):
@@ -51,4 +67,4 @@ class ImgConvertExtension(GObject.GObject, Nautilus.MenuProvider):
         for src in files:
             base, _ = os.path.splitext(src)
             dst = f"{base}.{fmt}"
-            subprocess.Popen(["magick", src, dst])
+            spawn_nonblocking(["magick", src, dst])
