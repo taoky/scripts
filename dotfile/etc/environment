@@ -13,6 +13,3 @@ GLFW_IM_MODULE=ibus
 # Firefox scrolling optimization
 MOZ_USE_XINPUT2=1
 MOZ_ENABLE_WAYLAND=1
-
-# Qt decoration
-QT_WAYLAND_DECORATION=adwaita

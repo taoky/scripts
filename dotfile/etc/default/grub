@@ -3,9 +3,9 @@
 GRUB_DEFAULT="0"
 GRUB_TIMEOUT=5
 GRUB_DISTRIBUTOR="Arch"
-GRUB_CMDLINE_LINUX_DEFAULT="crashkernel=1024M loglevel=3 quiet"
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet"
 # drm.debug=0x1e log_buf_len=1M for debugging i915
-GRUB_CMDLINE_LINUX="resume=UUID=6c80c677-34e3-4380-8a0e-667a3d7f29e7 i915.enable_psr=0 lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
+GRUB_CMDLINE_LINUX="rd.luks.name=90fa550a-1036-44e8-84c6-a2ac4ac17c8e=cryptroot resume=UUID=ab9fc98e-0b44-4750-95f4-377bb7a783ea root=/dev/mapper/cryptroot i915.enable_psr=0 lsm=landlock,lockdown,yama,integrity,apparmor,bpf"
 # GRUB_CMDLINE_LINUX="resume=UUID=6c80c677-34e3-4380-8a0e-667a3d7f29e7 drm.debug=0x1e log_buf_len=1M"
 
 # Preload both GPT and MBR modules so that they are not missed
