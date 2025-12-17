@@ -114,6 +114,7 @@ COMMON = {
     "bcc-libbpf-tools",
     "bear",
     "bind",
+    "blueprint-compiler",
     "bluez-utils",
     "bmon",
     "btrfs-progs",
@@ -289,6 +290,7 @@ COMMON = {
     "pango-taoky-debug",
     "pango-taoky-docs",
     "paru",
+    "pipewire-zeroconf",
     "playerctl",
     "pnpm",
     "podman",
@@ -396,6 +398,7 @@ COMMON = {
     "yt-dlp",
     "zenity",
     "zerotier-one",
+    "zig",
     "zsh",
     "zsh-completions",
 }
