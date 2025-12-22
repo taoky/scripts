@@ -205,6 +205,7 @@ COMMON = {
     "goreleaser",
     "gparted",
     "grub",
+    "gst-libav",
     "gst-plugin-pipewire",
     "guestfs-tools",
     "gtk3-demos",
