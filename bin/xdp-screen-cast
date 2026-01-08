@@ -208,7 +208,7 @@ def on_create_session_response(response, results):
         # types 1 | 2: AvailableSourceTypes with MONITOR | WINDOW
         options={
             "multiple": False,
-            "types": dbus.UInt32(1 | 2),
+            "types": dbus.UInt32(1 | 2 | 4),
             "cursor_mode": show_cursor,
         },
     )

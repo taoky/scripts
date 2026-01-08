@@ -17,7 +17,10 @@ TUNED = {
     "tuned-ppd",
 }
 
-TLP = {"tlp"}
+TLP = {
+    "tlp",
+    "tlp-pd",
+}
 
 APFS = {
     "apfs-fuse-git",
@@ -130,7 +133,6 @@ COMMON = {
     "cargo-fuzz",
     "cargo-release",
     "chafa",
-    "cheese",
     "chromium",
     "clang",
     "compsize",
@@ -172,6 +174,7 @@ COMMON = {
     "fsearch",
     "fwupd",
     "fx",
+    "gallery-dl",
     "gcc",
     "gdb",
     "gdm",
@@ -334,6 +337,8 @@ COMMON = {
     "ruff",
     "rustscan",
     "rustup",
+    "scx-scheds",
+    "scx-tools",
     "sg3_utils",
     "shellcheck-static",
     "shfmt",
@@ -341,6 +346,7 @@ COMMON = {
     "siege",
     "skopeo",
     "snapper",
+    "snapshot",
     "socat",
     "soundfont-fluid",
     "speech-dispatcher",
@@ -360,6 +366,7 @@ COMMON = {
     "timidity++",
     "tmux",
     "tokei",
+    "toolbox",
     "traceroute",
     "tree",
     "ttf-jetbrains-mono",

@@ -16,6 +16,12 @@ function dev
     tmpctr -v $(pwd):$(pwd) -w $(pwd) $argv local/dev-debian:13
 end
 
+function get_gallery
+    pushd ~/Pictures/
+    gallery-dl -v --cookies-from-browser firefox --write-metadata $argv
+    popd
+end
+
 if test $host = "nanoka.taoky.moe"
     alias gptoss20b='HIP_VISIBLE_DEVICES=0 llama-server -hf ggml-org/gpt-oss-20b-GGUF --ctx-size 32768 --jinja -ub 2048 -b 2048'
 end
