@@ -9,7 +9,7 @@ pkgname=(
   mutter-devkit
   mutter-docs
 )
-pkgver=49.2
+pkgver=49.3
 pkgrel=2
 pkgdesc="Window manager and compositor for GNOME"
 url="https://gitlab.gnome.org/GNOME/mutter"
@@ -96,7 +96,7 @@ source=(
   "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4618.patch"
   "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4619.patch"
 )
-b2sums=('1418475009a439c6360d0c9f972595d55c70fa7ac18badeb84fc0f560f793fa1a7f7c75b7204acff00c593021e19dd1f92bbaaa9d8037d0d9ae2b5d3fdce0cb7'
+b2sums=('9b58dd2d47d46a067665b044d21ba630c1de8b03b442f2a693c9e5181a8c326527d141512791450c95b80ee15d8a20cf00cce3e820563ab479f97df9085797af'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
         'SKIP'
         'SKIP'
@@ -158,6 +158,7 @@ package_mutter() {
 package_mutter-devkit() {
   pkgdesc="GNOME Mutter Development Kit"
   depends=(
+    cairo
     gcc-libs
     glib2
     glibc
