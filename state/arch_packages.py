@@ -189,6 +189,7 @@ COMMON = {
     "gnome-backgrounds",
     "gnome-calculator",
     "gnome-calendar",
+    "gnome-clocks",
     "gnome-control-center",
     "gnome-font-viewer",
     "gnome-keyring",

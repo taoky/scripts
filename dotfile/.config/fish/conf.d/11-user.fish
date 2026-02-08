@@ -24,6 +24,7 @@ end
 
 if test $host = "nanoka.taoky.moe"
     alias gptoss20b='HIP_VISIBLE_DEVICES=0 llama-server -hf ggml-org/gpt-oss-20b-GGUF --ctx-size 32768 --jinja -ub 2048 -b 2048'
+    alias glm46vflash='HIP_VISIBLE_DEVICES=0 llama-server -hf ggml-org/GLM-4.6V-Flash-GGUF'
 end
 
 function klogg

@@ -64,4 +64,4 @@ class OpenWithExtension(GObject.GObject, Nautilus.MenuProvider):
     
     def _terminal_callback(self, menu, file_):
         filename = Gio.File.new_for_uri(file_.get_uri()).get_path()
-        spawn_nonblocking(['xdg-terminal-exec', f'--dir={shlex.quote(filename)}'])
+        spawn_nonblocking(['xdg-terminal-exec', f'--dir={shlex.quote(filename)}', '--', 'fish'])
