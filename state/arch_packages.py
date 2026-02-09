@@ -301,6 +301,7 @@ COMMON = {
     "playerctl",
     "pnpm",
     "podman",
+    "podman-compose",
     "powertop",
     "pre-commit",
     "prettier",
