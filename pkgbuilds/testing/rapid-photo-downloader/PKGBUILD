@@ -17,7 +17,6 @@ depends=('desktop-file-utils' 'gstreamer' 'hicolor-icon-theme' 'libgexiv2' 'libn
          'python-show-in-file-manager')
 makedepends=('intltool' 'ifuse')
 optdepends=('ifuse: for iOS devices')
-changelog=$pkgname.changelog
 source=(https://launchpad.net/rapid/pyqt/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz{,.asc}
         0001-Fix-261-sqlite3.OperationalError-unable-to-open-data.patch)
 sha256sums=('a3dc363ee2bb931a4ba76d65ec136adda7d1fe99af2e59c90057ce0c842765e4'

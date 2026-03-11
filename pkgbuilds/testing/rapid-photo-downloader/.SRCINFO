@@ -3,7 +3,6 @@ pkgbase = rapid-photo-downloader
 	pkgver = 0.9.36
 	pkgrel = 4
 	url = https://www.damonlynch.net/rapid/
-	changelog = rapid-photo-downloader.changelog
 	arch = any
 	license = GPL3
 	makedepends = intltool
