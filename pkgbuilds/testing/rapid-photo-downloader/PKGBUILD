@@ -1,0 +1,43 @@
+# Maintainer: Jaroslav Lichtblau <svetlemodry@archlinux.org>
+# Contributor: Marc Moody <marc.r.moody at gmail dot com>
+# Contributor: Dinh Bowman <dinh at vagueindustries dot com>
+
+pkgname=rapid-photo-downloader
+pkgver=0.9.36
+pkgrel=4
+pkgdesc="Photo and video downloader"
+arch=('any')
+url="https://www.damonlynch.net/rapid/"
+license=('GPL3')
+depends=('desktop-file-utils' 'gstreamer' 'hicolor-icon-theme' 'libgexiv2' 'libnotify' 'python-arrow'
+         'perl-image-exiftool' 'python-colour' 'python-dateutil' 'python-easygui' 'python-gobject'
+         'python-gphoto2' 'python-psutil' 'python-pymediainfo' 'python-pyqt5' 'python-pyzmq'
+         'python-requests' 'python-setuptools' 'python-sortedcontainers' 'python-babel'
+         'python-tornado' 'python-pyxdg' 'qt5-imageformats' 'udisks2' 'python-tenacity' 'qt5-svg'
+         'python-show-in-file-manager')
+makedepends=('intltool' 'ifuse')
+optdepends=('ifuse: for iOS devices')
+changelog=$pkgname.changelog
+source=(https://launchpad.net/rapid/pyqt/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz{,.asc}
+        0001-Fix-261-sqlite3.OperationalError-unable-to-open-data.patch)
+sha256sums=('a3dc363ee2bb931a4ba76d65ec136adda7d1fe99af2e59c90057ce0c842765e4'
+            'SKIP'
+            'e16563f7d1317ba5a57677bb44f6f85bc327b6ff587ea7078ec048b0140f584b')
+validpgpkeys=('E26048A9F4A803B91CB1BD648005B1F36970BE28') # Damon Lynch <damonlynch@gmail.com>
+
+prepare() {
+  cd "${srcdir}"/$pkgname-$pkgver
+  patch -Np1 -i "${srcdir}"/0001-Fix-261-sqlite3.OperationalError-unable-to-open-data.patch
+}
+
+build() {
+  cd "${srcdir}"/$pkgname-$pkgver
+
+  python setup.py build
+}
+
+package() {
+  cd "${srcdir}"/$pkgname-$pkgver
+
+  python setup.py install --root="${pkgdir}" --optimize=1
+}
