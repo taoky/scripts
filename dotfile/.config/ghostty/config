@@ -47,7 +47,7 @@
 # # which is explained in the docs for that config option.
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
-theme = light:Builtin Solarized Light,dark:Builtin Solarized Dark
+theme = light:iTerm2 Solarized Light,dark:iTerm2 Solarized Dark
 copy-on-select = clipboard
 font-family = "JetBrains Mono"
 font-size = 14
