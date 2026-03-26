@@ -1,6 +1,5 @@
 {
     "workbench.colorTheme": "Solarized Light",
-    "window.zoomLevel": 3,
     "telemetry.telemetryLevel": "off",
     "git.enableSmartCommit": true,
     "git.confirmSync": false,
@@ -17,7 +16,6 @@
     },
     "python.formatting.blackPath": "/usr/bin/black",
     "python.formatting.provider": "black",
-    "python.defaultInterpreterPath": "",
     "files.maxMemoryForLargeFilesMB": 8192,
     "terminal.integrated.gpuAcceleration": "off",
     "editor.unicodeHighlight.invisibleCharacters": false,
@@ -70,9 +68,6 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "d.dubCompiler": "ldc2",
-    "d.stdlibPath": "auto",
-    "d.dubPath": "/usr/bin/dub",
-    "d.servedPath": "/home/taoky/.local/share/code-d/bin/serve-d",
     "github.copilot.editor.enableAutoCompletions": true,
     "workbench.editor.empty.hint": "hidden",
     "lldb.suppressUpdateNotifications": true,
@@ -98,4 +93,20 @@
     "remote.SSH.remotePlatform": {
         "mana.zerotier": "linux"
     },
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "gitlens.ai.model": "vscode",
+    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+    "window.zoomLevel": 3,
+    "git.blame.editorDecoration.enabled": true,
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "python.REPL.enableREPLSmartSend": false,
+    "update.showReleaseNotes": false,
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "zig.path": "zig",
+    "zig.zls.enabled": "on",
+    "git.openRepositoryInParentFolders": "never",
+    "slidev.annotations-line-numbers": false,
+    "terminal.integrated.initialHint": false,
 }
