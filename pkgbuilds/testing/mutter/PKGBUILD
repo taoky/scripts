@@ -9,7 +9,7 @@ pkgname=(
   mutter-devkit
   mutter-docs
 )
-pkgver=49.5
+pkgver=50.0
 pkgrel=2
 pkgdesc="Window manager and compositor for GNOME"
 url="https://gitlab.gnome.org/GNOME/mutter"
@@ -23,7 +23,6 @@ depends=(
   egl-wayland
   fontconfig
   fribidi
-  gcc-libs
   gdk-pixbuf2
   glib2
   glibc
@@ -45,10 +44,8 @@ depends=(
   libgirepository
   libglvnd
   libgudev
-  libice
   libinput
   libpipewire
-  libsm
   libsysprof-capture
   libwacom
   libx11
@@ -62,10 +59,7 @@ depends=(
   libxi
   libxinerama
   libxkbcommon
-  libxkbcommon-x11
-  libxkbfile
   libxrandr
-  libxtst
   mesa
   pango
   pipewire
@@ -97,7 +91,7 @@ source=(
   "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4618.patch"
   "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4619.patch"
 )
-b2sums=('c21e6efd80c90d66884de203c4f6223e70c759f70373df9b24f7d72299493d4a5550cd94954da1ac48730393b5fe87b6f9fd9616951bcbb58653795dde50d66c'
+b2sums=('bd33bec1e65648b386f4f8c042097c948ff663034a8f99a3aa483dd9b20c066a1c5e69634fffdcb503993eaa9460b45128d68ef418c572f5a635a8d2934313d3'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
         'SKIP'
         'SKIP'
@@ -139,7 +133,7 @@ _pick() {
 }
 
 package_mutter() {
-  provides=(libmutter-17.so)
+  provides=(libmutter-18.so)
   optdepends=(
     'bash-completion: Bash completions for gdctl'
     'mutter-devkit: Mutter SDK, "MDK"'
@@ -168,6 +162,7 @@ package_mutter-devkit() {
     libei
     libgcc
     libpipewire
+    libxkbcommon
     mutter
   )
 

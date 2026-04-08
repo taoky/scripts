@@ -109,4 +109,5 @@
     "git.openRepositoryInParentFolders": "never",
     "slidev.annotations-line-numbers": false,
     "terminal.integrated.initialHint": false,
+    "search.followSymlinks": false,
 }
