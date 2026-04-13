@@ -3,8 +3,9 @@
 # Contributor: Dinh Bowman <dinh at vagueindustries dot com>
 
 pkgname=rapid-photo-downloader
-pkgver=0.9.36
-pkgrel=4
+foldername=rapid_photo_downloader
+pkgver=0.9.37
+pkgrel=3
 pkgdesc="Photo and video downloader"
 arch=('any')
 url="https://www.damonlynch.net/rapid/"
@@ -15,28 +16,41 @@ depends=('desktop-file-utils' 'gstreamer' 'hicolor-icon-theme' 'libgexiv2' 'libn
          'python-requests' 'python-setuptools' 'python-sortedcontainers' 'python-babel'
          'python-tornado' 'python-pyxdg' 'qt5-imageformats' 'udisks2' 'python-tenacity' 'qt5-svg'
          'python-show-in-file-manager')
-makedepends=('intltool' 'ifuse')
+makedepends=('intltool' 'ifuse' 'python-hatch' 'python-installer')
 optdepends=('ifuse: for iOS devices')
-source=(https://launchpad.net/rapid/pyqt/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz{,.asc}
-        0001-Fix-261-sqlite3.OperationalError-unable-to-open-data.patch)
-sha256sums=('a3dc363ee2bb931a4ba76d65ec136adda7d1fe99af2e59c90057ce0c842765e4'
-            'SKIP'
-            'e16563f7d1317ba5a57677bb44f6f85bc327b6ff587ea7078ec048b0140f584b')
+#changelog=$pkgname.changelog
+
+source=(https://github.com/damonlynch/rapid-photo-downloader/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.gz{,.asc})
+sha256sums=('2545253b852b7c92d9732b5ace5e4aae5ca390a774b76828bad8b49468fcedea'
+            'SKIP')
 validpgpkeys=('E26048A9F4A803B91CB1BD648005B1F36970BE28') # Damon Lynch <damonlynch@gmail.com>
 
-prepare() {
-  cd "${srcdir}"/$pkgname-$pkgver
-  patch -Np1 -i "${srcdir}"/0001-Fix-261-sqlite3.OperationalError-unable-to-open-data.patch
-}
-
 build() {
+  mv ${srcdir}/${foldername}-${pkgver} ${srcdir}/${pkgname}-${pkgver}
   cd "${srcdir}"/$pkgname-$pkgver
 
-  python setup.py build
+  hatch build -t wheel
 }
 
 package() {
   cd "${srcdir}"/$pkgname-$pkgver
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 
-  python setup.py install --root="${pkgdir}" --optimize=1
+  # move the desktop file, locale and man to the correct locations
+  mv ${pkgdir}/usr/lib/python*/site-packages/share ${pkgdir}/usr/share/
+  mv ${pkgdir}/usr/lib/python*/site-packages/raphodo/locale ${pkgdir}/usr/share/locale/
+  install -d ${pkgdir}/usr/share/man/
+  mv ${pkgdir}/usr/lib/python*/site-packages/man ${pkgdir}/usr/share/man/man1/
+
+  # install the icons
+  install -Dm644 "data/icons/16x16/apps/rapid-photo-downloader.png" "${pkgdir}/usr/share/icons/hicolor/16x16/apps/rapid-photo-downloader.png"
+  install -Dm644 "data/icons/22x22/apps/rapid-photo-downloader.png" "${pkgdir}/usr/share/icons/hicolor/22x22/apps/rapid-photo-downloader.png"
+  install -Dm644 "data/icons/24x24/apps/rapid-photo-downloader.png" "${pkgdir}/usr/share/icons/hicolor/24x24/apps/rapid-photo-downloader.png"
+  install -Dm644 "data/icons/48x48/apps/rapid-photo-downloader.png" "${pkgdir}/usr/share/icons/hicolor/48x48/apps/rapid-photo-downloader.png"
+  install -Dm644 "data/icons/64x64/apps/rapid-photo-downloader.png" "${pkgdir}/usr/share/icons/hicolor/64x64/apps/rapid-photo-downloader.png"
+  install -Dm644 "data/icons/128x128/apps/rapid-photo-downloader.png" "${pkgdir}/usr/share/icons/hicolor/128x128/apps/rapid-photo-downloader.png"
+  install -Dm644 "data/icons/256x256/apps/rapid-photo-downloader.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/rapid-photo-downloader.png"
+  install -Dm644 "data/icons/512x512/apps/rapid-photo-downloader.png" "${pkgdir}/usr/share/icons/hicolor/512x512/apps/rapid-photo-downloader.png"
+  install -Dm644 "data/icons/scalable/apps/rapid-photo-downloader.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/rapid-photo-downloader.svg"
+
 }
