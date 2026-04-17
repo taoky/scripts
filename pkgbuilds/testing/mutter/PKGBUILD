@@ -9,8 +9,8 @@ pkgname=(
   mutter-devkit
   mutter-docs
 )
-pkgver=50.0
-pkgrel=3
+pkgver=50.1
+pkgrel=2
 pkgdesc="Window manager and compositor for GNOME"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64)
@@ -91,7 +91,7 @@ source=(
   "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4618.patch"
   "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4619.patch"
 )
-b2sums=('bd33bec1e65648b386f4f8c042097c948ff663034a8f99a3aa483dd9b20c066a1c5e69634fffdcb503993eaa9460b45128d68ef418c572f5a635a8d2934313d3'
+b2sums=('224bcda4fcd4aaf58abd1e52c95c36d93cf3d1621f87b3c9ca4b7130849cea1fd535dbb11142ad4676b18965d273a356d1112c9a1bd39ad39c2d6d7d4f5c8802'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
         'SKIP'
         'SKIP'
@@ -101,11 +101,6 @@ prepare() {
   cd mutter
   patch -p1 < "$srcdir/4618.patch"
   patch -p1 < "$srcdir/4619.patch"
-
-  # Fix for NVIDIA GPUs
-  # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5018
-  # https://gitlab.gnome.org/GNOME/mutter/-/issues/4724
-  git cherry-pick -n aae0955e6718de9084a6679fcd796cf8bd2cdef7
 }
 
 build() {
