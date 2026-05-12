@@ -1,3 +1,4 @@
 *
 !PKGBUILD
 !.gitignore
+!libical-4.patch
