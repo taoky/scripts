@@ -110,4 +110,7 @@
     "slidev.annotations-line-numbers": false,
     "terminal.integrated.initialHint": false,
     "search.followSymlinks": false,
+    "ty.importStrategy": "useBundled",
+    "python.defaultInterpreterPath": "",
+    "ansible.lightspeed.enabled": false,
 }
