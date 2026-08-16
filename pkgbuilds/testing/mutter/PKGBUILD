@@ -103,6 +103,7 @@ prepare() {
   cd mutter
   patch -p1 < "$srcdir/4618.patch"
   patch -p1 < "$srcdir/4619.patch"
+  patch -p1 < "$srcdir/5122.patch"
 }
 
 build() {
