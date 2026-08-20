@@ -49,4 +49,4 @@ class OpenWithExtension(GObject.GObject, Nautilus.MenuProvider):
 
     def _code_callback(self, menu, file_):
         filename = Gio.File.new_for_uri(file_.get_uri()).get_path()
-        spawn_nonblocking(['code', filename])
+        spawn_nonblocking(['codium', filename])
