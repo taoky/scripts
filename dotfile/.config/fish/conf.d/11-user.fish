@@ -51,3 +51,9 @@ function auto_theme --description 'Use osc11 (0=light, 1=dark) to set fish theme
 end
 
 auto_theme
+
+# VTE compat bind
+bind ctrl-h backward-kill-token
+# Replacement for alt-left/right
+bind alt-shift-left prevd-or-backward-word
+bind alt-shift-right nextd-or-forward-word

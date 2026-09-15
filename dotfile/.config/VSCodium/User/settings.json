@@ -113,4 +113,6 @@
     "ty.importStrategy": "useBundled",
     "python.defaultInterpreterPath": "",
     "ansible.lightspeed.enabled": false,
+    "ltex.additionalRules.motherTongue": "zh-CN",
+    "ltex.language": "auto",
 }
