@@ -1,6 +1,14 @@
 # Ref: https://github.com/zzh1996/mydocker/blob/master/Dockerfile
 FROM ustclug/debian:13
 
+RUN cat > /etc/apt/sources.list.d/backports.sources <<'EOF'
+Types: deb
+URIs: http://mirrors.ustc.edu.cn/debian
+Suites: trixie-backports
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+EOF
+
 # base system
 RUN apt update && apt install -y fish build-essential python3 python-is-python3 curl vim sudo
 RUN useradd -ms /usr/bin/fish user && \
