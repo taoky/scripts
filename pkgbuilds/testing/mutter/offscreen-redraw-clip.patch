@@ -1,0 +1,18 @@
+diff --git a/clutter/clutter/clutter-paint-context.c b/clutter/clutter/clutter-paint-context.c
+--- a/clutter/clutter/clutter-paint-context.c
++++ b/clutter/clutter/clutter-paint-context.c
+@@ -171,6 +171,14 @@ clutter_paint_context_pop_framebuffer (ClutterPaintContext *paint_context)
+ const MtkRegion *
+ clutter_paint_context_get_redraw_clip (ClutterPaintContext *paint_context)
+ {
++  /* The redraw clip belongs to the base framebuffer. Offscreen effects
++   * must capture their full contents, independently of the stage view or
++   * damaged region that triggered the paint.
++   */
++  if (clutter_paint_context_get_framebuffer (paint_context) !=
++      clutter_paint_context_get_base_framebuffer (paint_context))
++    return NULL;
++
+   return paint_context->redraw_clip;
+ }
+ 
